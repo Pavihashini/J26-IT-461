@@ -2,13 +2,19 @@ import unittest
 
 from fastapi.testclient import TestClient
 
+from app.api.deps import require_admin
 from app.main import app
 
 
 class ConsumptionForecastTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        app.dependency_overrides[require_admin] = lambda: None
         cls.client = TestClient(app)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        app.dependency_overrides.pop(require_admin, None)
 
     def test_options_list_trained_categories(self) -> None:
         body = self.client.get("/api/forecast/options").json()

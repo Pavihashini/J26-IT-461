@@ -1,10 +1,30 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.routes.auth import router as auth_router
 from app.api.routes.forecast import router as forecast_router
 
 
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    """Create the users table on first start; the database may be unreachable in dev, so do not crash."""
+    from sqlalchemy.exc import SQLAlchemyError
+
+    from app.db.base import Base
+    from app.db.session import engine
+    from app.models import user as _user  # noqa: F401  (registers the table)
+
+    try:
+        Base.metadata.create_all(engine)
+    except SQLAlchemyError:
+        pass
+    yield
+
+
 app = FastAPI(
+    lifespan=lifespan,
     title="Food Waste Prevention Backend",
     version="0.1.0",
     description="Initial API for the proactive food waste prevention system.",
@@ -30,6 +50,7 @@ app.add_middleware(
 )
 
 
+app.include_router(auth_router)
 app.include_router(forecast_router)
 
 

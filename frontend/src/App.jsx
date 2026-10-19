@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Activity, Bell, CalendarDays, ChefHat, CircleDollarSign, ClipboardCheck, Leaf, LayoutDashboard, ShieldAlert, ShoppingBag, Sprout, Utensils, Wallet } from 'lucide-react';
+import { Bell, CalendarDays, ChefHat, Leaf, LayoutDashboard, Loader2, LogOut, ShieldAlert, ShoppingBag, Sprout } from 'lucide-react';
 import DemandForecastPage from './pages/DemandForecastPage.jsx';
 import InventoryRiskPage from './pages/InventoryRiskPage.jsx';
 import SurplusBiddingPage from './pages/SurplusBiddingPage.jsx';
+import AuthPage from './pages/AuthPage.jsx';
 import { initialDishes, initialWasteRecords, isoDaysFromNow } from './data/mockData.js';
-import { fetchHealth } from './services/api.js';
+import { fetchCurrentUser, fetchHealth, getStoredToken, setSessionToken } from './services/api.js';
 
 const navigation = [
-  { id: 'forecast', label: 'Demand forecasting', detail: 'Prepare the right quantity', icon: ChefHat, number: '01' },
-  { id: 'inventory', label: 'Inventory & waste risk', detail: 'Protect stock value', icon: ShieldAlert, number: '02' },
-  { id: 'surplus', label: 'Surplus bidding', detail: 'Recover value from surplus', icon: ShoppingBag, number: '03' },
+  { id: 'forecast', label: 'Demand forecasting', detail: 'Prepare the right quantity', icon: ChefHat, number: '01', roles: ['admin'] },
+  { id: 'inventory', label: 'Inventory & waste risk', detail: 'Protect stock value', icon: ShieldAlert, number: '02', roles: ['admin'] },
+  { id: 'surplus', label: 'Surplus bidding', detail: 'Recover value from surplus', icon: ShoppingBag, number: '03', roles: ['user'] },
 ];
 
-export default function App() {
+function Dashboard({ user, onLogout }) {
+  const allowedNavigation = navigation.filter((item) => item.roles.includes(user.role));
   const [backendStatus, setBackendStatus] = useState('checking');
-  const [activeTab, setActiveTab] = useState('forecast');
+  const [activeTab, setActiveTab] = useState(allowedNavigation[0]?.id);
   const initialForecastDate = isoDaysFromNow(1);
   const [selectedDate, setSelectedDate] = useState(initialForecastDate);
   const [prepQuantities, setPrepQuantities] = useState(() => {
@@ -24,7 +26,7 @@ export default function App() {
     return Object.fromEntries(initialDishes.map((dish) => [dish.id, Math.ceil(dish.predicted * multiplier * (1 + dish.safetyPercent / 100))]));
   });
   const [wasteRecords, setWasteRecords] = useState(initialWasteRecords);
-  const activeSection = navigation.find((item) => item.id === activeTab) || navigation[0];
+  const activeSection = allowedNavigation.find((item) => item.id === activeTab) || allowedNavigation[0];
   const ActiveIcon = activeSection.icon;
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export default function App() {
       <div className="workspace-switch"><span className="workspace-logo">GR</span><div><small>WORKSPACE</small><strong>Green Room Bistro</strong></div><span className="workspace-chevron">⌄</span></div>
       <div className="nav-label">RESEARCH COMPONENTS</div>
       <nav className="main-navigation" aria-label="Main components">
-        {navigation.map((item) => {
+        {allowedNavigation.map((item) => {
           const Icon = item.icon;
           return <button type="button" key={item.id} className={`nav-item ${activeTab === item.id ? 'active' : ''}`} onClick={() => setActiveTab(item.id)} aria-current={activeTab === item.id ? 'page' : undefined}>
             <span className="nav-icon"><Icon size={19} strokeWidth={1.8} /></span><span className="nav-copy"><strong>{item.label}</strong><small>{item.detail}</small></span><span className="nav-number">{item.number}</span>
@@ -70,17 +72,70 @@ export default function App() {
     <main className="main-shell">
       <header className="topbar">
         <div className="breadcrumb"><LayoutDashboard size={15} /><span>Workspace</span><span className="crumb-divider">/</span><strong>{activeSection.label}</strong></div>
-        <div className="topbar-right"><span className={`backend-status ${backendStatus}`} role="status"><span className="backend-status-dot" /> {backendStatusLabel}</span><span className="demo-chip"><span className="demo-chip-dot" /> DEMO DATA</span><button className="icon-button" type="button" title="Demo alerts are shown in the selected component" onClick={() => setActiveTab('inventory')}><Bell size={18} /><span className="notification-dot" /></button><div className="profile-summary"><span className="profile-avatar">GM</span><div><strong>General Manager</strong><small>Restaurant admin</small></div></div></div>
+        <div className="topbar-right"><span className={`backend-status ${backendStatus}`} role="status"><span className="backend-status-dot" /> {backendStatusLabel}</span><span className="demo-chip"><span className="demo-chip-dot" /> DEMO DATA</span>{user.role === 'admin' && <button className="icon-button" type="button" title="Demo alerts are shown in the selected component" onClick={() => setActiveTab('inventory')}><Bell size={18} /><span className="notification-dot" /></button>}<div className="profile-summary"><span className="profile-avatar">{initials(user.full_name)}</span><div><strong>{user.full_name}</strong><small>{user.role === 'admin' ? 'Restaurant admin' : 'Registered user'}</small></div><button className="icon-button" type="button" title="Log out" aria-label="Log out" onClick={onLogout}><LogOut size={17} /></button></div></div>
       </header>
 
       <div className="content-area">
-        <div className="welcome-strip"><div><div className="welcome-eyebrow"><span className="welcome-icon"><ActiveIcon size={15} /></span> PROACTIVE FOOD WASTE PREVENTION</div><h2>Good afternoon, Manager <span>✦</span></h2><p>Make clearer kitchen decisions with a connected view of demand, inventory risk, and surplus recovery.</p></div><div className="welcome-date"><CalendarDays size={16} /><div><span>DEMO DATE</span><strong>{new Date().toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}</strong></div></div></div>
+        <div className="welcome-strip"><div><div className="welcome-eyebrow"><span className="welcome-icon"><ActiveIcon size={15} /></span> PROACTIVE FOOD WASTE PREVENTION</div><h2>Hello, {user.full_name.split(' ')[0]} <span>✦</span></h2><p>Make clearer kitchen decisions with a connected view of demand, inventory risk, and surplus recovery.</p></div><div className="welcome-date"><CalendarDays size={16} /><div><span>DEMO DATE</span><strong>{new Date().toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}</strong></div></div></div>
 
-        <div className={activeTab === 'forecast' ? 'page-visible' : 'page-hidden'}><DemandForecastPage selectedDate={selectedDate} setSelectedDate={setSelectedDate} prepQuantities={prepQuantities} setPrepQuantities={setPrepQuantities} /></div>
-        <div className={activeTab === 'inventory' ? 'page-visible' : 'page-hidden'}><InventoryRiskPage wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} selectedDate={selectedDate} /></div>
-        <div className={activeTab === 'surplus' ? 'page-visible' : 'page-hidden'}><SurplusBiddingPage isActive={activeTab === 'surplus'} /></div>
+        {user.role === 'admin' && <>
+          <div className={activeTab === 'forecast' ? 'page-visible' : 'page-hidden'}><DemandForecastPage selectedDate={selectedDate} setSelectedDate={setSelectedDate} prepQuantities={prepQuantities} setPrepQuantities={setPrepQuantities} /></div>
+          <div className={activeTab === 'inventory' ? 'page-visible' : 'page-hidden'}><InventoryRiskPage wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} selectedDate={selectedDate} /></div>
+        </>}
+        {user.role === 'user' && <div className="page-visible"><SurplusBiddingPage isActive /></div>}
       </div>
       <footer className="app-footer"><span>Root &amp; Reuse · Research prototype</span><span><i /> Frontend simulation only</span><span>J26 · IT · 461</span></footer>
     </main>
   </div>;
+}
+
+const initials = (name) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join('') || 'U';
+
+export default function App() {
+  const [session, setSession] = useState({ status: getStoredToken() ? 'checking' : 'signed-out', user: null });
+  const [notice, setNotice] = useState('');
+
+  useEffect(() => {
+    const token = getStoredToken();
+    if (!token) return undefined;
+    let isCurrent = true;
+    setSessionToken(token);
+    fetchCurrentUser()
+      .then((user) => {
+        if (isCurrent) setSession({ status: 'signed-in', user });
+      })
+      .catch(() => {
+        setSessionToken(null);
+        if (isCurrent) setSession({ status: 'signed-out', user: null });
+      });
+    return () => {
+      isCurrent = false;
+    };
+  }, []);
+
+  const signOut = (message = '') => {
+    setSessionToken(null);
+    setNotice(message);
+    setSession({ status: 'signed-out', user: null });
+  };
+
+  useEffect(() => {
+    const handleExpired = () => signOut('Your session has expired. Please log in again.');
+    window.addEventListener('auth:expired', handleExpired);
+    return () => window.removeEventListener('auth:expired', handleExpired);
+  }, []);
+
+  if (session.status === 'checking') {
+    return <div className="auth-shell"><div className="model-loading"><Loader2 size={18} className="spin" /> Loading…</div></div>;
+  }
+
+  if (session.status === 'signed-out') {
+    return <AuthPage notice={notice} onAuthenticated={({ access_token: token, user }) => {
+      setSessionToken(token);
+      setNotice('');
+      setSession({ status: 'signed-in', user });
+    }} />;
+  }
+
+  return <Dashboard key={session.user.id} user={session.user} onLogout={() => signOut()} />;
 }

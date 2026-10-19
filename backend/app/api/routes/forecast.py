@@ -1,6 +1,8 @@
 import json
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+
+from app.api.deps import require_admin
 
 from app.ml import consumption_model as model
 from app.schemas.forecast import (
@@ -15,7 +17,7 @@ from app.schemas.forecast import (
 )
 from app.services import menu_planner
 
-router = APIRouter(prefix="/api/forecast", tags=["forecast"])
+router = APIRouter(prefix="/api/forecast", tags=["forecast"], dependencies=[Depends(require_admin)])
 
 
 def _load_model() -> None:

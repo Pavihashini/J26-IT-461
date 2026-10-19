@@ -27,19 +27,49 @@ export async function fetchHealth() {
   return data;
 }
 
-async function requestJson(path, options) {
+const TOKEN_KEY = 'rr_access_token';
+
+export function getStoredToken() {
+  try {
+    return window.localStorage.getItem(TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function storeToken(token) {
+  try {
+    if (token) window.localStorage.setItem(TOKEN_KEY, token);
+    else window.localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    // storage may be blocked; the session then lasts until reload
+  }
+}
+
+let memoryToken = null;
+const currentToken = () => memoryToken || getStoredToken();
+
+async function requestJson(path, options = {}) {
   let response;
+  const token = currentToken();
+  const headers = { ...(options.headers || {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) };
 
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, { cache: 'no-store', ...options });
+    response = await fetch(`${API_BASE_URL}${path}`, { cache: 'no-store', ...options, headers });
   } catch {
     throw new Error('The backend could not be reached.');
   }
 
+  if (response.status === 401 && token && !path.startsWith('/api/auth/login')) {
+    window.dispatchEvent(new Event('auth:expired'));
+  }
+
   if (!response.ok) {
     let detail = '';
+    if (response.status === 422) detail = 'Please check the details you entered.';
     try {
-      detail = (await response.json())?.detail || '';
+      const body = await response.json();
+      if (typeof body?.detail === 'string') detail = body.detail;
     } catch {
       // keep the generic message
     }
@@ -63,4 +93,29 @@ export function fetchStockPlan(payload) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
+}
+
+export function setSessionToken(token) {
+  memoryToken = token;
+  storeToken(token);
+}
+
+export function loginUser(email, password) {
+  return requestJson('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+}
+
+export function registerUser(fullName, email, password) {
+  return requestJson('/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ full_name: fullName, email, password }),
+  });
+}
+
+export function fetchCurrentUser() {
+  return requestJson('/api/auth/me');
 }
