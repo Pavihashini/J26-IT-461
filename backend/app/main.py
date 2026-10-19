@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.routes.forecast import router as forecast_router
+
 
 app = FastAPI(
     title="Food Waste Prevention Backend",
@@ -28,6 +30,9 @@ app.add_middleware(
 )
 
 
+app.include_router(forecast_router)
+
+
 @app.get("/api/health")
 def health_check() -> dict[str, str]:
     """Confirm that the backend process is available."""
@@ -35,3 +40,40 @@ def health_check() -> dict[str, str]:
         "status": "ok",
         "service": "food-waste-prevention-backend",
     }
+
+
+@app.get("/api/health/db")
+def database_health_check() -> dict[str, str]:
+    """Confirm that the backend can reach the PostgreSQL database."""
+    from sqlalchemy import text
+    from sqlalchemy.exc import SQLAlchemyError
+
+    from app.db.session import engine
+
+    try:
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+    except RuntimeError as error:
+        return {"status": "error", "database": "not_configured", "detail": str(error)}
+    except SQLAlchemyError:
+        return {"status": "error", "database": "unreachable"}
+
+    return {"status": "ok", "database": "connected"}
+
+
+@app.get("/api/health/storage")
+def storage_health_check() -> dict[str, str]:
+    """Confirm that the Neon image bucket is reachable."""
+    from botocore.exceptions import BotoCoreError, ClientError
+
+    from app.storage import IMAGE_BUCKET_NAME, get_s3_client, storage_is_configured
+
+    if not storage_is_configured():
+        return {"status": "error", "storage": "not_configured", "bucket": IMAGE_BUCKET_NAME}
+
+    try:
+        get_s3_client().head_bucket(Bucket=IMAGE_BUCKET_NAME)
+    except (BotoCoreError, ClientError):
+        return {"status": "error", "storage": "unreachable", "bucket": IMAGE_BUCKET_NAME}
+
+    return {"status": "ok", "storage": "connected", "bucket": IMAGE_BUCKET_NAME}

@@ -549,3 +549,20 @@ tbody tr:hover { background: #fbfcfa; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* Model-based ingredient forecast */
+.model-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto auto; gap: 12px; align-items: end; margin-bottom: 16px; }
+.model-form label { display: flex; flex-direction: column; gap: 5px; font-size: 10px; color: #6d7e70; }
+.model-form select, .model-form input[type="number"], .model-lag-input { border: 1px solid #e0e8de; border-radius: 8px; padding: 8px 10px; font-size: 11px; color: #2d4e38; background: #fff; min-width: 0; }
+.model-form .model-check { flex-direction: row; align-items: center; gap: 7px; padding-bottom: 9px; white-space: nowrap; }
+.model-lag-input { width: 90px; padding: 6px 8px; }
+.planner-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.planner-results { display: flex; flex-direction: column; gap: 16px; }
+.planner-results h3 { margin: 0 0 8px; font-size: 12px; color: #294332; }
+.dish-option { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #eef2ed; font-size: 11px; }
+.dish-option small { display: block; color: #98a198; font-size: 9px; margin-top: 2px; }
+.model-loading { display: flex; align-items: center; gap: 8px; color: #77847b; font-size: 11px; }
+.button-primary:disabled { opacity: .6; cursor: not-allowed; }
+.spin { animation: model-spin 1s linear infinite; }
+@keyframes model-spin { to { transform: rotate(360deg); } }
+@media (max-width: 900px) { .model-form { grid-template-columns: 1fr 1fr; } .planner-grid { grid-template-columns: 1fr; } }

@@ -77,7 +77,7 @@ export default function App() {
         <div className="welcome-strip"><div><div className="welcome-eyebrow"><span className="welcome-icon"><ActiveIcon size={15} /></span> PROACTIVE FOOD WASTE PREVENTION</div><h2>Good afternoon, Manager <span>✦</span></h2><p>Make clearer kitchen decisions with a connected view of demand, inventory risk, and surplus recovery.</p></div><div className="welcome-date"><CalendarDays size={16} /><div><span>DEMO DATE</span><strong>{new Date().toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}</strong></div></div></div>
 
         <div className={activeTab === 'forecast' ? 'page-visible' : 'page-hidden'}><DemandForecastPage selectedDate={selectedDate} setSelectedDate={setSelectedDate} prepQuantities={prepQuantities} setPrepQuantities={setPrepQuantities} /></div>
-        <div className={activeTab === 'inventory' ? 'page-visible' : 'page-hidden'}><InventoryRiskPage wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} /></div>
+        <div className={activeTab === 'inventory' ? 'page-visible' : 'page-hidden'}><InventoryRiskPage wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} selectedDate={selectedDate} /></div>
         <div className={activeTab === 'surplus' ? 'page-visible' : 'page-hidden'}><SurplusBiddingPage isActive={activeTab === 'surplus'} /></div>
       </div>
       <footer className="app-footer"><span>Root &amp; Reuse · Research prototype</span><span><i /> Frontend simulation only</span><span>J26 · IT · 461</span></footer>

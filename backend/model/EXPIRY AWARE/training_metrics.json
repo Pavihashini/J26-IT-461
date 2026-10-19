@@ -1,0 +1,12 @@
+{
+  "model": "RandomForestRegressor",
+  "target": "consumed_qty",
+  "restaurants": 15,
+  "ingredients": 32,
+  "training_rows": 144000,
+  "testing_rows": 31200,
+  "MAE": 0.43821267539325187,
+  "RMSE": 0.9596639989524315,
+  "R2": 0.9736763188935744,
+  "warning": "Simulated data; results do not prove real-world accuracy."
+}
