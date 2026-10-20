@@ -1,10 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Cpu, Loader2 } from 'lucide-react';
+import { ChefHat, Cpu, Layers, Loader2 } from 'lucide-react';
 import { fetchConsumptionForecast, fetchForecastOptions } from '../services/api.js';
 import { formatDate } from '../utils.js';
 import { Notice, Panel, StatusBadge } from './Shared.jsx';
 
 const unitLabel = (unit) => (unit === 'loaf_450g' ? 'loaf (450 g)' : unit);
+const BUFFER_OPTIONS = [0, 5, 10, 15, 20];
+const WHOLE_UNITS = ['piece', 'loaf_450g'];
+
+// Predicted use plus a safety buffer; whole items are rounded up so the kitchen never under-prepares.
+function preparedQuantity(predicted, unit, bufferPercent) {
+  const withBuffer = predicted * (1 + bufferPercent / 100);
+  return WHOLE_UNITS.includes(unit) ? Math.ceil(withBuffer - 1e-9) : Math.round(withBuffer * 100) / 100;
+}
 
 export default function IngredientForecastPanel({ selectedDate }) {
   const [options, setOptions] = useState(null);
@@ -13,6 +21,7 @@ export default function IngredientForecastPanel({ selectedDate }) {
   const [weather, setWeather] = useState('Sunny');
   const [customers, setCustomers] = useState(200);
   const [isHoliday, setIsHoliday] = useState(false);
+  const [bufferPercent, setBufferPercent] = useState(10);
   const [history, setHistory] = useState({});
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -40,6 +49,16 @@ export default function IngredientForecastPanel({ selectedDate }) {
   );
   const maxQuantity = Math.max(0, ...Object.values(forecastByIngredient));
   const totalItems = result?.forecasts.filter((row) => row.predicted_qty > 0).length || 0;
+  const unitByIngredient = useMemo(() => Object.fromEntries((options?.ingredients || []).map((item) => [item.name, item.unit])), [options]);
+  const preparation = useMemo(
+    () => (result?.forecasts || [])
+      .filter((row) => row.predicted_qty > 0)
+      .map((row) => ({ ...row, prepare: preparedQuantity(row.predicted_qty, row.unit, bufferPercent) }))
+      .sort((a, b) => b.predicted_qty - a.predicted_qty)
+      .slice(0, 8),
+    [result, bufferPercent],
+  );
+  const recentUseCount = Object.values(history).filter((entry) => entry && (entry.previous_day_qty || entry.avg_7day_qty)).length;
 
   const updateHistory = (ingredient, field, value) => {
     setHistory((previous) => ({ ...previous, [ingredient]: { ...previous[ingredient], [field]: value } }));
@@ -110,6 +129,34 @@ export default function IngredientForecastPanel({ selectedDate }) {
 
     {error && <Notice tone="warning">{error}</Notice>}
     {result && <p className="model-summary">{result.restaurant_name} · {result.day_of_week} · {totalItems} ingredients with predicted use</p>}
+
+    {result && <>
+      <div className="factor-strip">
+        <span className="factor-title"><Layers size={13} /> Demand factors combined in this prediction</span>
+        <span className="factor-chip">Restaurant: {result.restaurant_name}</span>
+        <span className="factor-chip">Day: {result.day_of_week}</span>
+        <span className="factor-chip">Weather: {weather}</span>
+        <span className="factor-chip">Customers: {Math.round(Number(customers) || 0)}</span>
+        <span className="factor-chip">{isHoliday ? 'Holiday / festival' : 'Regular day'}</span>
+        <span className="factor-chip">Recent use: {recentUseCount ? `${recentUseCount} entered` : 'auto'}</span>
+      </div>
+
+      <div className="prep-recommendation">
+        <div className="prep-heading">
+          <span className="factor-title"><ChefHat size={13} /> Kitchen preparation recommendation</span>
+          <label>Safety buffer
+            <select value={bufferPercent} onChange={(event) => setBufferPercent(Number(event.target.value))}>
+              {BUFFER_OPTIONS.map((value) => <option key={value} value={value}>{value}%</option>)}
+            </select>
+          </label>
+        </div>
+        <p className="muted">Prepare the highest-use ingredients first: predicted use plus the buffer, rounded up for whole items.</p>
+        {preparation.map((row, index) => <div className="dish-option" key={row.ingredient}>
+          <div><strong>{index + 1}. {row.ingredient}</strong><small>Predicted use {row.predicted_qty.toLocaleString('en-LK', { maximumFractionDigits: 2 })} {unitLabel(unitByIngredient[row.ingredient] || row.unit)}</small></div>
+          <StatusBadge tone="green">Prepare {row.prepare.toLocaleString('en-LK', { maximumFractionDigits: 2 })} {unitLabel(unitByIngredient[row.ingredient] || row.unit)}</StatusBadge>
+        </div>)}
+      </div>
+    </>}
 
     <div className="table-wrap">
       <table>
