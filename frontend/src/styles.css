@@ -809,3 +809,23 @@ tbody tr:hover { background: #fbfcfa; }
   .add-item-grid { grid-template-columns: 1fr 1fr; }
   .add-item-form { padding: 16px 14px; }
 }
+
+/* Edit item + quick stock update */
+.inventory-table .row-actions { width: 96px; white-space: nowrap; }
+.edit-item { display: inline-grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 50%; background: transparent; color: #b8a98a; cursor: pointer; transition: background .15s ease, color .15s ease; }
+.inventory-table tbody tr:hover .edit-item, .edit-item:focus-visible { color: #2d6b46; background: #e3f0df; }
+.edit-item:hover { background: #3c8a5b !important; color: #fff !important; }
+.stock-quick-input { width: 78px; padding: 6px 10px; border: 1px solid transparent; border-radius: 999px; background: transparent; font: inherit; font-size: 15px; font-weight: 700; color: #2b4636; text-align: right; transition: background .15s ease, border-color .15s ease; }
+.inventory-table tbody tr:hover .stock-quick-input { background: #fffdf8; border-color: #e3cfa6; }
+.stock-quick-input:focus { outline: 2px solid rgba(60,138,91,.35); outline-offset: 1px; background: #fff; border-color: #3c8a5b; }
+
+/* Cook a dish panel */
+.cook-controls { display: grid; grid-template-columns: minmax(200px, 1.4fr) 140px auto; gap: 16px; align-items: end; padding: 16px 18px; margin-bottom: 18px; border: 1px solid #efe4c8; border-radius: 16px; background: linear-gradient(135deg, #fffaf0 0%, #fbf3e1 100%); }
+.cook-controls label { display: flex; flex-direction: column; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: #8a5a2b; }
+.cook-controls select, .cook-controls input { border: 1px solid #e3cfa6; border-radius: 999px; padding: 10px 16px; font-size: 14px; color: #2d4e38; background: #fffdf8; min-width: 0; font-weight: 500; text-transform: none; letter-spacing: 0; }
+.cook-controls .button-primary { border-radius: 999px; padding: 12px 22px; font-size: 13px; }
+.cook-table td, .cook-table th { padding: 12px 16px; font-size: 14px; }
+.cook-table .model-lag-input { width: 100px; text-align: right; }
+.cook-short { color: #b64943; }
+.cook-table + * { margin-top: 12px; }
+@media (max-width: 900px) { .cook-controls { grid-template-columns: 1fr 1fr; } .cook-controls .button-primary { grid-column: span 2; } }

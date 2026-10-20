@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { AlertTriangle, ArrowDownRight, ArrowUpRight, CalendarClock, CheckCircle2, CircleDollarSign, ClipboardList, Coins, Info, Leaf, Package, Plus, ShieldAlert, ShoppingCart, Trash2, TrendingDown, Wallet, X } from 'lucide-react';
-import { ingredientCatalog } from '../data/mockData.js';
+import { AlertTriangle, ArrowDownRight, ArrowUpRight, CalendarClock, CheckCircle2, ChefHat, CircleDollarSign, ClipboardList, Coins, Info, Leaf, Package, Pencil, Plus, ShieldAlert, ShoppingCart, Trash2, TrendingDown, Wallet, X } from 'lucide-react';
+import { ingredientCatalog, initialDishes } from '../data/mockData.js';
 import { dayDifference, formatDate, formatLKR, sumBy } from '../utils.js';
 import StockPlannerPanel from '../components/StockPlannerPanel.jsx';
 import { Notice, PageHeading, Panel, StatCard, StatusBadge } from '../components/Shared.jsx';
@@ -25,7 +25,7 @@ function loadInventory() {
 }
 
 // Derives the demonstration risk fields from the values an admin enters.
-function buildInventoryItem(form) {
+function buildInventoryItem(form, existing) {
   const stock = Math.max(0, Number(form.stock) || 0);
   const expiryInDays = Math.max(0, Math.round(Number(form.expiryInDays) || 0));
   const expectedUsage = Math.max(0, Number(form.expectedUsage) || 0);
@@ -43,7 +43,7 @@ function buildInventoryItem(form) {
     understock ? 'Forecast use exceeds current stock' : 'No recorded waste for this new item',
   ];
   return {
-    id: `item-${Date.now().toString(36)}`,
+    id: existing?.id ?? `item-${Date.now().toString(36)}`,
     name: form.name.trim(),
     unit: form.unit,
     costPerUnit: Math.max(0, Number(form.costPerUnit) || 0),
@@ -51,7 +51,7 @@ function buildInventoryItem(form) {
     expiryInDays,
     expectedUsage,
     expectedUsageBeforeExpiry,
-    historicalWaste: 0,
+    historicalWaste: existing?.historicalWaste ?? 0,
     riskScore,
     risk,
     status: flags.length ? flags.join(' · ') : 'In range',
@@ -60,18 +60,21 @@ function buildInventoryItem(form) {
   };
 }
 
-function AddItemForm({ onAdd, onClose }) {
-  const [form, setForm] = useState(emptyItemForm);
+const itemToForm = (item) => ({ name: item.name, unit: item.unit, costPerUnit: item.costPerUnit, stock: item.stock, expiryInDays: item.expiryInDays, expectedUsage: item.expectedUsage });
+
+function ItemForm({ initial, onSave, onClose }) {
+  const isEditing = Boolean(initial);
+  const [form, setForm] = useState(initial ? itemToForm(initial) : emptyItemForm);
   const [error, setError] = useState('');
   const set = (key) => (event) => setForm((previous) => ({ ...previous, [key]: event.target.value }));
   const submit = (event) => {
     event.preventDefault();
     if (!form.name.trim()) return setError('Enter an item name.');
     if ([form.costPerUnit, form.stock, form.expiryInDays, form.expectedUsage].some((value) => value === '')) return setError('Fill in cost, stock, days to expiry and expected use.');
-    onAdd(buildInventoryItem(form));
+    onSave(buildInventoryItem(form, initial));
   };
   return <form className="add-item-form" onSubmit={submit}>
-    <div className="add-item-head"><strong>Add inventory item</strong><button type="button" className="add-item-close" onClick={onClose} aria-label="Close form"><X size={16} /></button></div>
+    <div className="add-item-head"><strong>{isEditing ? `Edit ${initial.name}` : 'Add inventory item'}</strong><button type="button" className="add-item-close" onClick={onClose} aria-label="Close form"><X size={16} /></button></div>
     <div className="add-item-grid">
       <label className="wide"><span>Item name</span><input type="text" value={form.name} onChange={set('name')} placeholder="e.g. Green chilli" autoFocus /></label>
       <label><span>Unit</span><select value={form.unit} onChange={set('unit')}>{UNIT_OPTIONS.map((unit) => <option key={unit} value={unit}>{unit}</option>)}</select></label>
@@ -81,8 +84,63 @@ function AddItemForm({ onAdd, onClose }) {
       <label><span>Expected use / 7d</span><input type="number" min="0" step="any" value={form.expectedUsage} onChange={set('expectedUsage')} placeholder="0" /></label>
     </div>
     {error && <p className="add-item-error" role="alert">{error}</p>}
-    <div className="add-item-actions"><button type="button" className="button-secondary" onClick={onClose}>Cancel</button><button type="submit" className="button-primary"><Plus size={15} /> Add item</button></div>
+    <div className="add-item-actions"><button type="button" className="button-secondary" onClick={onClose}>Cancel</button><button type="submit" className="button-primary">{isEditing ? <><CheckCircle2 size={15} /> Save changes</> : <><Plus size={15} /> Add item</>}</button></div>
   </form>;
+}
+
+const roundQty = (value) => Math.round(value * 1000) / 1000;
+
+// Cooking a dish deducts its recipe ingredients (per portion x portions) from the matching inventory items.
+function CookDishPanel({ items, onConsume }) {
+  const [dishId, setDishId] = useState(initialDishes[0].id);
+  const [portions, setPortions] = useState('10');
+  const [overrides, setOverrides] = useState({});
+  const [message, setMessage] = useState(null);
+  const dish = initialDishes.find((entry) => entry.id === dishId);
+  const portionCount = Math.max(0, Number(portions) || 0);
+
+  const lines = dish.recipe.map((line) => {
+    const item = items.find((entry) => entry.id === line.ingredientId);
+    const raw = overrides[line.ingredientId];
+    const needed = raw !== undefined ? Math.max(0, Number(raw) || 0) : roundQty(line.amount * portionCount);
+    return { ...line, item, needed, input: raw !== undefined ? raw : String(needed) };
+  });
+  const missing = lines.filter((line) => !line.item);
+  const short = lines.filter((line) => line.item && line.needed > line.item.stock);
+  const canCook = portionCount > 0 && missing.length === 0 && short.length === 0 && lines.some((line) => line.needed > 0);
+
+  const reset = () => { setOverrides({}); setMessage(null); };
+  const cook = () => {
+    onConsume(lines.map((line) => ({ id: line.item.id, amount: line.needed })));
+    setMessage(`${portionCount} × ${dish.name} cooked. ${lines.map((line) => `${line.item.name} ${line.item.stock} → ${roundQty(line.item.stock - line.needed)} ${line.item.unit}`).join(' · ')}`);
+    setOverrides({});
+  };
+
+  return <Panel title="Cook a dish · auto-update stock" subtitle="Choose a dish and the number of portions. The recipe quantities are deducted from the matching inventory items.">
+    <div className="cook-controls">
+      <label><span>Dish</span><select value={dishId} onChange={(event) => { setDishId(event.target.value); reset(); }}>{initialDishes.map((entry) => <option key={entry.id} value={entry.id}>{entry.name}</option>)}</select></label>
+      <label><span>Portions</span><input type="number" min="1" step="1" value={portions} onChange={(event) => { setPortions(event.target.value); setOverrides({}); setMessage(null); }} /></label>
+      <button type="button" className="button-primary" disabled={!canCook} onClick={cook}><ChefHat size={15} /> Cook &amp; deduct stock</button>
+    </div>
+    <div className="table-wrap">
+      <table className="cook-table">
+        <thead><tr><th>Ingredient</th><th>Needed (editable)</th><th>In stock</th><th>After cooking</th></tr></thead>
+        <tbody>{lines.map((line) => {
+          const after = line.item ? roundQty(line.item.stock - line.needed) : null;
+          const isShort = line.item && after < 0;
+          return <tr key={line.ingredientId}>
+            <td><div className="table-primary">{line.item ? line.item.name : line.ingredientId}</div>{!line.item && <div className="table-secondary">Not in the inventory list</div>}</td>
+            <td><input className="model-lag-input" type="number" min="0" step="any" aria-label={`Quantity of ${line.ingredientId} needed`} value={line.input} onChange={(event) => { setOverrides((previous) => ({ ...previous, [line.ingredientId]: event.target.value })); setMessage(null); }} /> <span className="muted">{line.unit}</span></td>
+            <td>{line.item ? <>{line.item.stock} <span className="muted">{line.item.unit}</span></> : '—'}</td>
+            <td>{line.item ? <strong className={isShort ? 'cook-short' : ''}>{isShort ? `Short by ${roundQty(-after)}` : after} <span className="muted">{line.item.unit}</span></strong> : '—'}</td>
+          </tr>;
+        })}</tbody>
+      </table>
+    </div>
+    {missing.length > 0 && <Notice tone="warning">{missing.map((line) => line.ingredientId).join(', ')} {missing.length === 1 ? 'is' : 'are'} not in the inventory list, so this dish cannot be cooked until {missing.length === 1 ? 'it is' : 'they are'} added again.</Notice>}
+    {short.length > 0 && <Notice tone="warning">Not enough stock for {short.map((line) => line.item.name).join(', ')}. Lower the portions or restock first.</Notice>}
+    {message && <Notice>{message}</Notice>}
+  </Panel>;
 }
 
 function costFor(record) {
@@ -107,9 +165,16 @@ function BarLine({ label, value, max, valueLabel, subLabel }) {
   </div>;
 }
 
-function RiskOverview({ onOpenFinancials, items, onAddItem, onDeleteItem }) {
+function RiskOverview({ onOpenFinancials, items, onAddItem, onUpdateItem, onDeleteItem, onConsume }) {
   const [selectedId, setSelectedId] = useState('chicken');
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const editingItem = items.find((item) => item.id === editingId);
+  const closeForm = () => { setShowForm(false); setEditingId(null); };
+  const commitStock = (item, value) => {
+    if (value === '' || Number(value) === item.stock) return;
+    onUpdateItem(buildInventoryItem({ ...itemToForm(item), stock: Math.max(0, Number(value) || 0) }, item));
+  };
   const selected = items.find((item) => item.id === selectedId) || items[0];
   const highCount = items.filter((item) => item.risk === 'High').length;
   const mediumCount = items.filter((item) => item.risk === 'Medium').length;
@@ -148,25 +213,27 @@ function RiskOverview({ onOpenFinancials, items, onAddItem, onDeleteItem }) {
       </div>
     </Panel>
 
-    <Panel title="Ingredient inventory" subtitle="Select an ingredient to see the factors behind its simulated risk score." action={<div className="inventory-actions"><span className="micro-tag">Illustrative scores · 0–100</span><button type="button" className="button-primary" onClick={() => setShowForm((open) => !open)}><Plus size={15} /> Add item</button></div>}>
-      {showForm && <AddItemForm onClose={() => setShowForm(false)} onAdd={(item) => { onAddItem(item); setSelectedId(item.id); setShowForm(false); }} />}
+    <Panel title="Ingredient inventory" subtitle="Select an ingredient to see the factors behind its simulated risk score." action={<div className="inventory-actions"><span className="micro-tag">Illustrative scores · 0–100</span><button type="button" className="button-primary" onClick={() => { setEditingId(null); setShowForm((open) => !open); }}><Plus size={15} /> Add item</button></div>}>
+      {(showForm || editingItem) && <ItemForm key={editingItem?.id ?? 'new'} initial={editingItem} onClose={closeForm} onSave={(item) => { editingItem ? onUpdateItem(item) : onAddItem(item); setSelectedId(item.id); closeForm(); }} />}
       <div className="table-wrap">
         <table className="inventory-table">
           <thead><tr><th>Ingredient</th><th>Current stock</th><th>Expiry</th><th>Expected use / 7d</th><th>Waste risk</th><th>Status</th><th><span className="sr-only">Actions</span></th></tr></thead>
           <tbody>{items.length === 0 && <tr><td colSpan={7} className="inventory-empty">No inventory items yet. Use “Add item” to start tracking stock.</td></tr>}{items.map((item) => (
             <tr className={selectedId === item.id ? 'selected-row' : ''} data-risk={item.risk} key={item.id} onClick={() => setSelectedId(item.id)} tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setSelectedId(item.id); }}>
               <td><div className="table-primary">{item.name}</div><div className="table-secondary">Unit cost {formatLKR(item.costPerUnit)} / {item.unit}</div></td>
-              <td><strong>{item.stock}</strong> <span className="muted">{item.unit}</span></td>
+              <td><input className="stock-quick-input" type="number" min="0" step="any" key={`${item.id}-${item.stock}`} defaultValue={item.stock} title="Type a new stock amount and press Enter" aria-label={`Current stock of ${item.name}`} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => { event.stopPropagation(); if (event.key === 'Enter') event.currentTarget.blur(); if (event.key === 'Escape') { event.currentTarget.value = item.stock; event.currentTarget.blur(); } }} onBlur={(event) => commitStock(item, event.target.value)} /> <span className="muted">{item.unit}</span></td>
               <td><div className="table-primary">{item.expiryInDays === 0 ? 'Today' : `${item.expiryInDays} days`}</div><div className="table-secondary">Remaining shelf life</div></td>
               <td>{item.expectedUsage} <span className="muted">{item.unit}</span></td>
               <td><div className="risk-cell"><strong>{item.riskScore}</strong><div className="risk-meter"><span className={riskTone(item.risk)} style={{ width: `${item.riskScore}%` }} /></div><StatusBadge tone={riskTone(item.risk)}>{item.risk}</StatusBadge></div></td>
               <td><StatusBadge tone={item.status.toLowerCase().includes('understock') ? 'blue' : item.risk === 'High' ? 'red' : item.risk === 'Medium' ? 'orange' : 'green'}>{item.status}</StatusBadge></td>
-              <td className="row-actions"><button type="button" className="delete-item" title={`Delete ${item.name}`} aria-label={`Delete ${item.name}`} onClick={(event) => { event.stopPropagation(); if (window.confirm(`Delete "${item.name}" from the inventory list?`)) onDeleteItem(item.id); }} onKeyDown={(event) => event.stopPropagation()}><Trash2 size={16} /></button></td>
+              <td className="row-actions"><button type="button" className="edit-item" title={`Edit ${item.name}`} aria-label={`Edit ${item.name}`} onClick={(event) => { event.stopPropagation(); setShowForm(false); setEditingId(item.id); }} onKeyDown={(event) => event.stopPropagation()}><Pencil size={16} /></button><button type="button" className="delete-item" title={`Delete ${item.name}`} aria-label={`Delete ${item.name}`} onClick={(event) => { event.stopPropagation(); if (window.confirm(`Delete "${item.name}" from the inventory list?`)) onDeleteItem(item.id); }} onKeyDown={(event) => event.stopPropagation()}><Trash2 size={16} /></button></td>
             </tr>
           ))}</tbody>
         </table>
       </div>
     </Panel>
+
+    <CookDishPanel items={items} onConsume={onConsume} />
 
     {selected && <div className="two-column-grid">
       <Panel title={`${selected.name}: risk explanation`} subtitle="Why this item received its current classification.">
@@ -341,6 +408,9 @@ export default function InventoryRiskPage({ wasteRecords, setWasteRecords, selec
       actions={<div className="section-switch"><button type="button" className={section === 'risk' ? 'active' : ''} onClick={() => setSection('risk')}><ShieldAlert size={15} /> Risk overview</button><button type="button" className={section === 'finance' ? 'active' : ''} onClick={() => setSection('finance')}><CircleDollarSign size={15} /> Cost &amp; savings</button></div>}
     />
     {section === 'risk' && <StockPlannerPanel selectedDate={selectedDate} />}
-    {section === 'risk' ? <RiskOverview onOpenFinancials={() => setSection('finance')} items={items} onAddItem={(item) => updateItems((previous) => [...previous, item])} onDeleteItem={(id) => updateItems((previous) => previous.filter((item) => item.id !== id))} /> : <FinancialAnalysis wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} items={items} />}
+    {section === 'risk' ? <RiskOverview onOpenFinancials={() => setSection('finance')} items={items} onAddItem={(item) => updateItems((previous) => [...previous, item])} onUpdateItem={(item) => updateItems((previous) => previous.map((current) => current.id === item.id ? item : current))} onConsume={(deductions) => updateItems((previous) => previous.map((current) => {
+      const used = deductions.find((entry) => entry.id === current.id);
+      return used ? buildInventoryItem({ ...itemToForm(current), stock: Math.max(0, roundQty(current.stock - used.amount)) }, current) : current;
+    }))} onDeleteItem={(id) => updateItems((previous) => previous.filter((item) => item.id !== id))} /> : <FinancialAnalysis wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} items={items} />}
   </div>;
 }
