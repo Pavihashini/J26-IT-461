@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { AlertTriangle, ArrowDownRight, ArrowUpRight, CalendarClock, CheckCircle2, ChefHat, CircleDollarSign, ClipboardList, Coins, Info, Leaf, Package, Pencil, Plus, ShieldAlert, ShoppingCart, Trash2, TrendingDown, Wallet, X } from 'lucide-react';
+import { AlertTriangle, ArrowDownRight, ArrowUpRight, CalendarClock, CheckCircle2, ChefHat, CircleDollarSign, ClipboardList, Coins, Info, Leaf, Package, Pencil, Plus, Search, ShieldAlert, ShoppingCart, Trash2, TrendingDown, Wallet, X } from 'lucide-react';
 import { ingredientCatalog, initialDishes } from '../data/mockData.js';
 import { dayDifference, formatDate, formatLKR, sumBy } from '../utils.js';
 import StockPlannerPanel from '../components/StockPlannerPanel.jsx';
@@ -169,6 +169,22 @@ function RiskOverview({ onOpenFinancials, items, onAddItem, onUpdateItem, onDele
   const [selectedId, setSelectedId] = useState('chicken');
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [query, setQuery] = useState('');
+  const [riskFilter, setRiskFilter] = useState('All');
+  const [sortKey, setSortKey] = useState('default');
+  const filtersActive = query.trim() !== '' || riskFilter !== 'All' || sortKey !== 'default';
+  const visibleItems = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    const sorters = {
+      risk: (a, b) => b.riskScore - a.riskScore,
+      expiry: (a, b) => a.expiryInDays - b.expiryInDays,
+      name: (a, b) => a.name.localeCompare(b.name),
+      stock: (a, b) => a.stock - b.stock,
+    };
+    const matches = items.filter((item) => (riskFilter === 'All' || item.risk === riskFilter) && (!needle || item.name.toLowerCase().includes(needle)));
+    return sorters[sortKey] ? [...matches].sort(sorters[sortKey]) : matches;
+  }, [items, query, riskFilter, sortKey]);
+  const clearFilters = () => { setQuery(''); setRiskFilter('All'); setSortKey('default'); };
   const editingItem = items.find((item) => item.id === editingId);
   const closeForm = () => { setShowForm(false); setEditingId(null); };
   const commitStock = (item, value) => {
@@ -215,10 +231,22 @@ function RiskOverview({ onOpenFinancials, items, onAddItem, onUpdateItem, onDele
 
     <Panel title="Ingredient inventory" subtitle="Select an ingredient to see the factors behind its simulated risk score." action={<div className="inventory-actions"><span className="micro-tag">Illustrative scores · 0–100</span><button type="button" className="button-primary" onClick={() => { setEditingId(null); setShowForm((open) => !open); }}><Plus size={15} /> Add item</button></div>}>
       {(showForm || editingItem) && <ItemForm key={editingItem?.id ?? 'new'} initial={editingItem} onClose={closeForm} onSave={(item) => { editingItem ? onUpdateItem(item) : onAddItem(item); setSelectedId(item.id); closeForm(); }} />}
+      <div className="inventory-toolbar">
+        <label className="inventory-search"><Search size={16} /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search ingredients…" aria-label="Search ingredients" /></label>
+        <div className="risk-filter" role="group" aria-label="Filter by risk level">{['All', 'High', 'Medium', 'Low'].map((level) => <button type="button" key={level} className={`${riskFilter === level ? 'active' : ''} ${level.toLowerCase()}`} aria-pressed={riskFilter === level} onClick={() => setRiskFilter(level)}>{level}</button>)}</div>
+        <label className="inventory-sort"><span>Sort by</span><select value={sortKey} onChange={(event) => setSortKey(event.target.value)}>
+          <option value="default">Default order</option>
+          <option value="risk">Risk score (high → low)</option>
+          <option value="expiry">Expiry (soonest first)</option>
+          <option value="stock">Stock (low → high)</option>
+          <option value="name">Name (A → Z)</option>
+        </select></label>
+        <span className="inventory-count">Showing {visibleItems.length} of {items.length}{filtersActive && <button type="button" className="inventory-clear" onClick={clearFilters}>Clear</button>}</span>
+      </div>
       <div className="table-wrap">
         <table className="inventory-table">
           <thead><tr><th>Ingredient</th><th>Current stock</th><th>Expiry</th><th>Expected use / 7d</th><th>Waste risk</th><th>Status</th><th><span className="sr-only">Actions</span></th></tr></thead>
-          <tbody>{items.length === 0 && <tr><td colSpan={7} className="inventory-empty">No inventory items yet. Use “Add item” to start tracking stock.</td></tr>}{items.map((item) => (
+          <tbody>{visibleItems.length === 0 && <tr><td colSpan={7} className="inventory-empty">{items.length === 0 ? 'No inventory items yet. Use “Add item” to start tracking stock.' : 'No ingredients match your search or filter.'}</td></tr>}{visibleItems.map((item) => (
             <tr className={selectedId === item.id ? 'selected-row' : ''} data-risk={item.risk} key={item.id} onClick={() => setSelectedId(item.id)} tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setSelectedId(item.id); }}>
               <td><div className="table-primary">{item.name}</div><div className="table-secondary">Unit cost {formatLKR(item.costPerUnit)} / {item.unit}</div></td>
               <td><input className="stock-quick-input" type="number" min="0" step="any" key={`${item.id}-${item.stock}`} defaultValue={item.stock} title="Type a new stock amount and press Enter" aria-label={`Current stock of ${item.name}`} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => { event.stopPropagation(); if (event.key === 'Enter') event.currentTarget.blur(); if (event.key === 'Escape') { event.currentTarget.value = item.stock; event.currentTarget.blur(); } }} onBlur={(event) => commitStock(item, event.target.value)} /> <span className="muted">{item.unit}</span></td>
