@@ -88,16 +88,6 @@ button:focus-visible, input:focus-visible, tr[tabindex]:focus-visible { outline:
 .profile-summary strong { display: block; color: #31483a; font-size: 10px; }
 .profile-summary small { display: block; margin-top: 4px; color: #8b988e; font-size: 9px; }
 .content-area { width: 100%; max-width: 1600px; margin: 0 auto; padding: 26px 32px 20px; flex: 1; }
-.welcome-strip { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 21px 24px; margin-bottom: 27px; background: linear-gradient(103deg, #e9f2e5 0%, #f2f6ee 57%, #edf2e8 100%); border: 1px solid #e0eadc; border-radius: 15px; overflow: hidden; position: relative; }
-.welcome-strip::after { content: ''; position: absolute; width: 190px; height: 190px; right: 120px; top: -110px; border: 28px solid rgba(89,142,97,.05); border-radius: 50%; pointer-events: none; }
-.welcome-eyebrow { display: flex; align-items: center; gap: 7px; font-size: 8px; letter-spacing: 1.15px; font-weight: 800; color: #5a8163; }
-.welcome-icon { display: grid; place-items: center; width: 24px; height: 24px; color: #2d6b46; border-radius: 8px; background: #d7e8d1; }
-.welcome-strip h2 { font-family: 'Segoe UI', 'Inter', system-ui, sans-serif; letter-spacing: -.75px; font-size: clamp(19px, 2vw, 25px); margin: 11px 0 6px; color: #254a36; font-weight: 800; }
-.welcome-strip h2 span { color: #bd9252; font-size: 16px; vertical-align: 3px; }
-.welcome-strip p { margin: 0; color: #687e6c; font-size: 11px; line-height: 1.6; }
-.welcome-date { display: flex; align-items: center; gap: 10px; color: #548060; background: rgba(255,255,255,.65); border: 1px solid rgba(218,231,215,.85); padding: 11px 13px; border-radius: 10px; min-width: 155px; z-index: 1; }
-.welcome-date span { display: block; font-size: 8px; color: #859b88; letter-spacing: .9px; font-weight: 700; }
-.welcome-date strong { display: block; margin-top: 5px; font-size: 11px; color: #315b3e; }
 .page-hidden { display: none; }
 .page-visible { display: block; }
 .page-stack { display: flex; flex-direction: column; gap: 20px; }
@@ -454,15 +444,6 @@ tbody tr:hover { background: #fbfcfa; }
   .profile-summary > div { display: none; }
   .profile-avatar { width: 30px; height: 30px; }
   .content-area { padding: 15px 12px 18px; }
-  .welcome-strip { padding: 16px 13px; margin-bottom: 20px; border-radius: 12px; align-items: flex-start; }
-  .welcome-strip p { max-width: 360px; font-size: 10px; }
-  .welcome-date { min-width: unset; padding: 8px; gap: 6px; }
-  .welcome-date > svg { display: none; }
-  .welcome-date span { font-size: 6px; white-space: nowrap; }
-  .welcome-date strong { font-size: 8px; white-space: nowrap; }
-  .welcome-strip h2 { font-size: 18px; }
-  .welcome-eyebrow { font-size: 7px; letter-spacing: .6px; }
-  .welcome-icon { width: 20px; height: 20px; }
   .page-stack { gap: 14px; }
   .page-heading { align-items: flex-start; flex-direction: column; gap: 13px; }
   .page-heading h1 { font-size: 24px; }
@@ -593,3 +574,33 @@ tbody tr:hover { background: #fbfcfa; }
 .prep-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .prep-heading label { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #6d7e70; }
 .prep-heading select { border: 1px solid #e0e8de; border-radius: 8px; padding: 5px 8px; font-size: 11px; color: #2d4e38; background: #fff; }
+
+/* Welcome banner (restaurant theme) */
+.welcome-banner { --warm: #b8743a; display: flex; justify-content: space-between; align-items: stretch; gap: 24px; padding: 28px 30px; margin-bottom: 27px; position: relative; overflow: hidden; border: 1px solid #e2e6d3; border-radius: 20px; box-shadow: 0 12px 32px rgba(60, 50, 30, 0.07); background:
+  radial-gradient(circle at 88% 0%, rgba(214, 160, 96, .22), transparent 42%),
+  linear-gradient(115deg, #e6f0df 0%, #f6f4e6 52%, #f8ecd9 100%); }
+.welcome-banner::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .5; background-image:
+  linear-gradient(rgba(120, 140, 100, .06) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(120, 140, 100, .06) 1px, transparent 1px); background-size: 26px 26px; -webkit-mask-image: linear-gradient(90deg, transparent 30%, #000 100%); mask-image: linear-gradient(90deg, transparent 30%, #000 100%); }
+.welcome-art { position: absolute; right: 250px; bottom: -6px; width: 250px; height: auto; color: #8a6a3d; opacity: .55; pointer-events: none; }
+.welcome-main { position: relative; z-index: 1; min-width: 0; max-width: 620px; }
+.welcome-eyebrow { display: flex; align-items: center; gap: 9px; font-size: 9px; letter-spacing: 1.4px; font-weight: 800; color: #8a5a2b; }
+.welcome-icon { display: grid; place-items: center; width: 28px; height: 28px; color: #fff; border-radius: 10px; background: linear-gradient(135deg, #3c8a5b, #2c6248); box-shadow: 0 4px 10px rgba(44, 98, 72, .25); }
+.welcome-banner h2 { font-family: Georgia, 'Segoe UI', serif; letter-spacing: -.5px; font-size: clamp(24px, 2.8vw, 34px); margin: 14px 0 8px; color: #23402f; font-weight: 700; line-height: 1.15; }
+.welcome-banner h2 span { color: var(--warm); font-size: 20px; vertical-align: 6px; }
+.welcome-banner p { margin: 0; color: #66705f; font-size: 13px; line-height: 1.7; max-width: 540px; }
+.welcome-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.welcome-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 10px; font-weight: 700; color: #4a6f55; background: rgba(255,255,255,.75); border: 1px solid rgba(206,222,198,.95); border-radius: 999px; }
+.welcome-chip.role { color: #fff; background: #3c8a5b; border-color: #3c8a5b; }
+.welcome-chip.service { color: #8a4f1c; background: #fbeed9; border-color: #f0d5ae; }
+.welcome-date-card { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; gap: 6px; min-width: 196px; padding: 16px 20px; color: #6f7f5f; background: rgba(255,255,255,.82); border: 1px solid rgba(226,230,211,.95); border-top: 4px solid var(--warm); border-radius: 14px; box-shadow: 0 8px 20px rgba(60, 50, 30, 0.08); }
+.welcome-date-top { display: flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 800; letter-spacing: .9px; text-transform: uppercase; color: #8a5a2b; }
+.welcome-date-card strong { font-family: Georgia, 'Segoe UI', serif; font-size: 21px; letter-spacing: -.3px; color: #23402f; }
+.welcome-date-time { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #4f7b5b; }
+@media (max-width: 1100px) { .welcome-art { display: none; } }
+@media (max-width: 760px) {
+  .welcome-banner { flex-direction: column; padding: 20px 18px; gap: 16px; border-radius: 15px; }
+  .welcome-banner p { font-size: 12px; }
+  .welcome-date-card { min-width: 0; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 12px 14px; }
+  .welcome-date-card strong { font-size: 16px; }
+}
