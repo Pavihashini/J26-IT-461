@@ -811,7 +811,7 @@ tbody tr:hover { background: #fbfcfa; }
 }
 
 /* Edit item + quick stock update */
-.inventory-table .row-actions { width: 96px; white-space: nowrap; }
+.inventory-table .row-actions { width: 136px; white-space: nowrap; }
 .edit-item { display: inline-grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 50%; background: transparent; color: #b8a98a; cursor: pointer; transition: background .15s ease, color .15s ease; }
 .inventory-table tbody tr:hover .edit-item, .edit-item:focus-visible { color: #2d6b46; background: #e3f0df; }
 .edit-item:hover { background: #3c8a5b !important; color: #fff !important; }
@@ -847,3 +847,13 @@ tbody tr:hover { background: #fbfcfa; }
 .inventory-count { margin-left: auto; font-size: 12px; color: #8d8a7c; display: inline-flex; align-items: center; gap: 10px; }
 .inventory-clear { border: 0; background: transparent; padding: 0; font-size: 12px; font-weight: 700; color: #2d6b46; text-decoration: underline; cursor: pointer; }
 @media (max-width: 640px) { .inventory-toolbar { gap: 10px; } .risk-filter { width: 100%; justify-content: space-between; } .inventory-count { margin-left: 0; } }
+
+/* Record waste from an inventory row */
+.waste-item { display: inline-grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 50%; background: transparent; color: #b8a98a; cursor: pointer; transition: background .15s ease, color .15s ease; }
+.inventory-table tbody tr:hover .waste-item, .waste-item:focus-visible { color: #b8743a; background: #fbeed9; }
+.waste-item:hover { background: #c9823d !important; color: #fff !important; }
+.waste-form .add-item-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.waste-form input[readonly] { background: #f6efdd; color: #8a5a2b; font-weight: 700; }
+.waste-form-hint { margin: 12px 0 0; font-size: 12.5px; color: #8d8a7c; }
+.waste-notice { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.waste-notice > :first-child { flex: 1 1 300px; }

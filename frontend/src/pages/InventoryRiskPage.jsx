@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { AlertTriangle, ArrowDownRight, ArrowUpRight, CalendarClock, CheckCircle2, ChefHat, CircleDollarSign, ClipboardList, Coins, Info, Leaf, Package, Pencil, Plus, Search, ShieldAlert, ShoppingCart, Trash2, TrendingDown, Wallet, X } from 'lucide-react';
-import { ingredientCatalog, initialDishes } from '../data/mockData.js';
+import { AlertTriangle, ArrowDownRight, ArrowUpRight, CalendarClock, CheckCircle2, ChefHat, CircleDollarSign, ClipboardList, Coins, Info, Leaf, Package, PackageX, Pencil, Plus, Search, ShieldAlert, ShoppingCart, Trash2, TrendingDown, Wallet, X } from 'lucide-react';
+import { ingredientCatalog, initialDishes, todayISO } from '../data/mockData.js';
 import { dayDifference, formatDate, formatLKR, sumBy } from '../utils.js';
 import StockPlannerPanel from '../components/StockPlannerPanel.jsx';
 import { Notice, PageHeading, Panel, StatCard, StatusBadge } from '../components/Shared.jsx';
@@ -88,6 +88,32 @@ function ItemForm({ initial, onSave, onClose }) {
   </form>;
 }
 
+const WASTE_REASONS = ['Expired stock', 'Spoilage', 'Overstocking', 'Excess preparation'];
+
+function WasteForm({ item, onSave, onClose }) {
+  const [quantity, setQuantity] = useState('');
+  const [reason, setReason] = useState(item.expiryInDays <= 1 ? 'Expired stock' : 'Spoilage');
+  const [error, setError] = useState('');
+  const amount = Number(quantity);
+  const submit = (event) => {
+    event.preventDefault();
+    if (!(amount > 0)) return setError('Enter the quantity that was wasted.');
+    if (amount > item.stock) return setError(`Only ${item.stock} ${item.unit} is in stock.`);
+    onSave(amount, reason);
+  };
+  return <form className="add-item-form waste-form" onSubmit={submit}>
+    <div className="add-item-head"><strong>Record waste · {item.name}</strong><button type="button" className="add-item-close" onClick={onClose} aria-label="Close form"><X size={16} /></button></div>
+    <div className="add-item-grid">
+      <label><span>Quantity wasted ({item.unit})</span><input type="number" min="0" step="any" value={quantity} onChange={(event) => { setQuantity(event.target.value); setError(''); }} placeholder="0" autoFocus /></label>
+      <label><span>Reason</span><select value={reason} onChange={(event) => setReason(event.target.value)}>{WASTE_REASONS.map((entry) => <option key={entry} value={entry}>{entry}</option>)}</select></label>
+      <label><span>Estimated loss</span><input type="text" readOnly value={formatLKR(Math.max(0, amount || 0) * item.costPerUnit)} /></label>
+    </div>
+    <p className="waste-form-hint">Current stock {item.stock} {item.unit} → {roundQty(Math.max(0, item.stock - (amount || 0)))} {item.unit}. A record is added to Cost &amp; savings and today’s date is used.</p>
+    {error && <p className="add-item-error" role="alert">{error}</p>}
+    <div className="add-item-actions"><button type="button" className="button-secondary" onClick={onClose}>Cancel</button><button type="submit" className="button-primary"><PackageX size={15} /> Record waste</button></div>
+  </form>;
+}
+
 const roundQty = (value) => Math.round(value * 1000) / 1000;
 
 // Cooking a dish deducts its recipe ingredients (per portion x portions) from the matching inventory items.
@@ -165,7 +191,10 @@ function BarLine({ label, value, max, valueLabel, subLabel }) {
   </div>;
 }
 
-function RiskOverview({ onOpenFinancials, items, onAddItem, onUpdateItem, onDeleteItem, onConsume }) {
+function RiskOverview({ onOpenFinancials, items, onAddItem, onUpdateItem, onDeleteItem, onConsume, onRecordWaste }) {
+  const [wastingId, setWastingId] = useState(null);
+  const [wasteNotice, setWasteNotice] = useState('');
+  const wastingItem = items.find((item) => item.id === wastingId);
   const [selectedId, setSelectedId] = useState('chicken');
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -229,8 +258,10 @@ function RiskOverview({ onOpenFinancials, items, onAddItem, onUpdateItem, onDele
       </div>
     </Panel>
 
-    <Panel title="Ingredient inventory" subtitle="Select an ingredient to see the factors behind its simulated risk score." action={<div className="inventory-actions"><span className="micro-tag">Illustrative scores · 0–100</span><button type="button" className="button-primary" onClick={() => { setEditingId(null); setShowForm((open) => !open); }}><Plus size={15} /> Add item</button></div>}>
+    <Panel title="Ingredient inventory" subtitle="Select an ingredient to see the factors behind its simulated risk score." action={<div className="inventory-actions"><span className="micro-tag">Illustrative scores · 0–100</span><button type="button" className="button-primary" onClick={() => { setEditingId(null); setWastingId(null); setShowForm((open) => !open); }}><Plus size={15} /> Add item</button></div>}>
       {(showForm || editingItem) && <ItemForm key={editingItem?.id ?? 'new'} initial={editingItem} onClose={closeForm} onSave={(item) => { editingItem ? onUpdateItem(item) : onAddItem(item); setSelectedId(item.id); closeForm(); }} />}
+      {wastingItem && <WasteForm key={wastingItem.id} item={wastingItem} onClose={() => setWastingId(null)} onSave={(quantity, reason) => { onRecordWaste(wastingItem, quantity, reason); setWasteNotice(`Recorded ${quantity} ${wastingItem.unit} of ${wastingItem.name} as ${reason.toLowerCase()} (${formatLKR(quantity * wastingItem.costPerUnit)}). Stock reduced and the record was added to Cost & savings.`); setWastingId(null); }} />}
+      {wasteNotice && <div className="waste-notice"><Notice>{wasteNotice}</Notice><button type="button" className="inventory-clear" onClick={() => { setWasteNotice(''); onOpenFinancials(); }}>View in Cost &amp; savings</button></div>}
       <div className="inventory-toolbar">
         <label className="inventory-search"><Search size={16} /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search ingredients…" aria-label="Search ingredients" /></label>
         <div className="risk-filter" role="group" aria-label="Filter by risk level">{['All', 'High', 'Medium', 'Low'].map((level) => <button type="button" key={level} className={`${riskFilter === level ? 'active' : ''} ${level.toLowerCase()}`} aria-pressed={riskFilter === level} onClick={() => setRiskFilter(level)}>{level}</button>)}</div>
@@ -254,7 +285,7 @@ function RiskOverview({ onOpenFinancials, items, onAddItem, onUpdateItem, onDele
               <td>{item.expectedUsage} <span className="muted">{item.unit}</span></td>
               <td><div className="risk-cell"><strong>{item.riskScore}</strong><div className="risk-meter"><span className={riskTone(item.risk)} style={{ width: `${item.riskScore}%` }} /></div><StatusBadge tone={riskTone(item.risk)}>{item.risk}</StatusBadge></div></td>
               <td><StatusBadge tone={item.status.toLowerCase().includes('understock') ? 'blue' : item.risk === 'High' ? 'red' : item.risk === 'Medium' ? 'orange' : 'green'}>{item.status}</StatusBadge></td>
-              <td className="row-actions"><button type="button" className="edit-item" title={`Edit ${item.name}`} aria-label={`Edit ${item.name}`} onClick={(event) => { event.stopPropagation(); setShowForm(false); setEditingId(item.id); }} onKeyDown={(event) => event.stopPropagation()}><Pencil size={16} /></button><button type="button" className="delete-item" title={`Delete ${item.name}`} aria-label={`Delete ${item.name}`} onClick={(event) => { event.stopPropagation(); if (window.confirm(`Delete "${item.name}" from the inventory list?`)) onDeleteItem(item.id); }} onKeyDown={(event) => event.stopPropagation()}><Trash2 size={16} /></button></td>
+              <td className="row-actions"><button type="button" className="edit-item" title={`Edit ${item.name}`} aria-label={`Edit ${item.name}`} onClick={(event) => { event.stopPropagation(); setShowForm(false); setWastingId(null); setEditingId(item.id); }} onKeyDown={(event) => event.stopPropagation()}><Pencil size={16} /></button><button type="button" className="waste-item" title={`Record waste for ${item.name}`} aria-label={`Record waste for ${item.name}`} onClick={(event) => { event.stopPropagation(); setShowForm(false); setEditingId(null); setWasteNotice(''); setWastingId(item.id); }} onKeyDown={(event) => event.stopPropagation()}><PackageX size={16} /></button><button type="button" className="delete-item" title={`Delete ${item.name}`} aria-label={`Delete ${item.name}`} onClick={(event) => { event.stopPropagation(); if (window.confirm(`Delete "${item.name}" from the inventory list?`)) onDeleteItem(item.id); }} onKeyDown={(event) => event.stopPropagation()}><Trash2 size={16} /></button></td>
             </tr>
           ))}</tbody>
         </table>
@@ -439,6 +470,11 @@ export default function InventoryRiskPage({ wasteRecords, setWasteRecords, selec
     {section === 'risk' ? <RiskOverview onOpenFinancials={() => setSection('finance')} items={items} onAddItem={(item) => updateItems((previous) => [...previous, item])} onUpdateItem={(item) => updateItems((previous) => previous.map((current) => current.id === item.id ? item : current))} onConsume={(deductions) => updateItems((previous) => previous.map((current) => {
       const used = deductions.find((entry) => entry.id === current.id);
       return used ? buildInventoryItem({ ...itemToForm(current), stock: Math.max(0, roundQty(current.stock - used.amount)) }, current) : current;
-    }))} onDeleteItem={(id) => updateItems((previous) => previous.filter((item) => item.id !== id))} /> : <FinancialAnalysis wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} items={items} />}
+    }))} onRecordWaste={(item, quantity, category) => {
+      setWasteRecords((records) => [{ id: `W-${Date.now().toString(36).toUpperCase()}`, itemId: item.id, item: item.name, quantity, unit: item.unit, unitCost: item.costPerUnit, category, date: todayISO() }, ...records]);
+      updateItems((previous) => previous.map((current) => current.id === item.id
+        ? buildInventoryItem({ ...itemToForm(current), stock: Math.max(0, roundQty(current.stock - quantity)) }, { ...current, historicalWaste: (current.historicalWaste || 0) + quantity })
+        : current));
+    }} onDeleteItem={(id) => updateItems((previous) => previous.filter((item) => item.id !== id))} /> : <FinancialAnalysis wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} items={items} />}
   </div>;
 }
