@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Bell, CalendarDays, ChefHat, Leaf, LayoutDashboard, Loader2, LogOut, ShieldAlert, ShoppingBag, Sprout } from 'lucide-react';
+import { Bell, ChefHat, Leaf, LayoutDashboard, Loader2, LogOut, ShieldAlert, ShoppingBag, Sprout } from 'lucide-react';
 import DemandForecastPage from './pages/DemandForecastPage.jsx';
 import InventoryRiskPage from './pages/InventoryRiskPage.jsx';
 import SurplusBiddingPage from './pages/SurplusBiddingPage.jsx';
 import AuthPage from './pages/AuthPage.jsx';
+import WelcomeBanner from './components/WelcomeBanner.jsx';
 import { initialDishes, initialWasteRecords, isoDaysFromNow } from './data/mockData.js';
 import { fetchCurrentUser, fetchHealth, getStoredToken, setSessionToken } from './services/api.js';
 
@@ -27,7 +28,6 @@ function Dashboard({ user, onLogout }) {
   });
   const [wasteRecords, setWasteRecords] = useState(initialWasteRecords);
   const activeSection = allowedNavigation.find((item) => item.id === activeTab) || allowedNavigation[0];
-  const ActiveIcon = activeSection.icon;
 
   useEffect(() => {
     let isCurrent = true;
@@ -76,7 +76,7 @@ function Dashboard({ user, onLogout }) {
       </header>
 
       <div className="content-area">
-        <div className="welcome-strip"><div><div className="welcome-eyebrow"><span className="welcome-icon"><ActiveIcon size={15} /></span> PROACTIVE FOOD WASTE PREVENTION</div><h2>Hello, {user.full_name.split(' ')[0]} <span>✦</span></h2><p>Make clearer kitchen decisions with a connected view of demand, inventory risk, and surplus recovery.</p></div><div className="welcome-date"><CalendarDays size={16} /><div><span>DEMO DATE</span><strong>{new Date().toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}</strong></div></div></div>
+        <WelcomeBanner user={user} section={activeSection} />
 
         {user.role === 'admin' && <>
           <div className={activeTab === 'forecast' ? 'page-visible' : 'page-hidden'}><DemandForecastPage selectedDate={selectedDate} setSelectedDate={setSelectedDate} prepQuantities={prepQuantities} setPrepQuantities={setPrepQuantities} /></div>
