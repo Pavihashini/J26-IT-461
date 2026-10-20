@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { AlertTriangle, ArrowDownRight, ArrowUpRight, CalendarClock, CheckCircle2, CircleDollarSign, ClipboardList, Coins, Info, Leaf, Package, ShieldAlert, ShoppingCart, TrendingDown, Wallet } from 'lucide-react';
 import { ingredientCatalog } from '../data/mockData.js';
 import { dayDifference, formatDate, formatLKR, sumBy } from '../utils.js';
+import StockPlannerPanel from '../components/StockPlannerPanel.jsx';
 import { Notice, PageHeading, Panel, StatCard, StatusBadge } from '../components/Shared.jsx';
 
 const riskTone = (risk) => risk === 'High' ? 'red' : risk === 'Medium' ? 'orange' : 'green';
@@ -248,7 +249,7 @@ function FinancialAnalysis({ wasteRecords, setWasteRecords }) {
   </div>;
 }
 
-export default function InventoryRiskPage({ wasteRecords, setWasteRecords }) {
+export default function InventoryRiskPage({ wasteRecords, setWasteRecords, selectedDate }) {
   const [section, setSection] = useState('risk');
   return <div className="page-stack">
     <PageHeading
@@ -257,6 +258,7 @@ export default function InventoryRiskPage({ wasteRecords, setWasteRecords }) {
       description="Connect stock levels and expiry dates with forecast usage and historical waste. Use the same inventory context to understand recorded losses and possible savings."
       actions={<div className="section-switch"><button type="button" className={section === 'risk' ? 'active' : ''} onClick={() => setSection('risk')}><ShieldAlert size={15} /> Risk overview</button><button type="button" className={section === 'finance' ? 'active' : ''} onClick={() => setSection('finance')}><CircleDollarSign size={15} /> Cost &amp; savings</button></div>}
     />
+    {section === 'risk' && <StockPlannerPanel selectedDate={selectedDate} />}
     {section === 'risk' ? <RiskOverview onOpenFinancials={() => setSection('finance')} /> : <FinancialAnalysis wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} />}
   </div>;
 }

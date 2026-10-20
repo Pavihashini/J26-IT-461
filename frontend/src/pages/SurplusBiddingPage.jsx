@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Activity, ArrowRight, BadgeCheck, Clock3, Gavel, PackageCheck, ShieldCheck, ShoppingBag, TimerReset, Trophy } from 'lucide-react';
+import { Activity, ArrowRight, BadgeCheck, Clock3, Gavel, PackageCheck, ShieldCheck, ShoppingBag, TimerReset, TrendingUp, Trophy, Users, Zap } from 'lucide-react';
 import { initialSurplusListings, ingredientCatalog } from '../data/mockData.js';
 import { formatLKR, timeRemaining } from '../utils.js';
 import { FlowStrip, Notice, PageHeading, Panel, StatusBadge } from '../components/Shared.jsx';
@@ -7,6 +7,13 @@ import { FlowStrip, Notice, PageHeading, Panel, StatusBadge } from '../component
 function clockNow() {
   return new Date().toLocaleTimeString('en-LK', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
 }
+
+const noveltyItems = [
+  { icon: Zap, title: 'Automatic surplus listing', text: 'Triggered by Component 2. Surplus detected by inventory-risk analysis becomes a listing without manual entry.' },
+  { icon: Users, title: 'Real-time customer bidding', text: 'Customers compete on live surplus items, and the highest bid updates as bids arrive.' },
+  { icon: Clock3, title: 'Time-boxed auction', text: 'Each listing has a fixed bidding window, so unsold stock is resolved before it spoils.' },
+  { icon: TrendingUp, title: 'Dynamic pricing instead of fixed discounting', text: 'Demand sets the final price through bidding rather than a preset markdown.' },
+];
 
 export default function SurplusBiddingPage({ isActive = true }) {
   const [listings, setListings] = useState(() => initialSurplusListings.map((item) => ({ ...item, bids: [...item.bids] })));
@@ -81,6 +88,12 @@ export default function SurplusBiddingPage({ isActive = true }) {
 
     <Panel className="process-panel" title="Surplus recovery workflow" subtitle="Second prevention layer: recover value if some surplus remains despite demand and inventory planning.">
       <FlowStrip items={['Surplus detected', 'Listing created', 'Timed bidding', 'Highest valid bid wins']} />
+    </Panel>
+
+    <Panel className="novelty-panel" title="Research novelty" subtitle="What makes this component different from conventional markdown-based surplus handling.">
+      <div className="novelty-grid">
+        {noveltyItems.map(({ icon: Icon, title, text }) => <article className="novelty-card" key={title}><span className="novelty-icon"><Icon size={18} /></span><div><strong>{title}</strong><p>{text}</p></div></article>)}
+      </div>
     </Panel>
 
     <div className="auction-layout">

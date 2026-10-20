@@ -228,3 +228,10 @@ frontend/dist/
 # Environment files
 .env.*
 !.env.example
+# Large trained ML models
+backend/model/EXPIRY AWARE/*.joblib
+backend/model/EXPIRY AWARE/*.pkl
+
+# Python generated files
+__pycache__/
+*.pyc
