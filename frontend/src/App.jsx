@@ -76,7 +76,7 @@ function Dashboard({ user, onLogout }) {
       </header>
 
       <div className="content-area">
-        <div className="welcome-strip"><div><div className="welcome-eyebrow"><span className="welcome-icon"><ActiveIcon size={15} /></span> PROACTIVE FOOD WASTE PREVENTION</div><h2>Hello, {user.full_name.split(' ')[0]} <span>✦</span></h2><p>Make clearer kitchen decisions with a connected view of demand, inventory risk, and surplus recovery.</p></div><div className="welcome-date"><CalendarDays size={16} /><div><span>DEMO DATE</span><strong>{new Date().toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}</strong></div></div></div>
+        <div className="welcome-strip"><div><div className="welcome-eyebrow"><span className="welcome-icon"><ActiveIcon size={15} /></span> PROACTIVE FOOD WASTE PREVENTION</div><h2>{greeting()}, {user.full_name.split(' ')[0]} <span>✦</span></h2><p>Make clearer kitchen decisions with a connected view of demand, inventory risk, and surplus recovery.</p></div><div className="welcome-date"><CalendarDays size={16} /><div><span>DEMO DATE</span><strong>{new Date().toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}</strong></div></div></div>
 
         {user.role === 'admin' && <>
           <div className={activeTab === 'forecast' ? 'page-visible' : 'page-hidden'}><DemandForecastPage selectedDate={selectedDate} setSelectedDate={setSelectedDate} prepQuantities={prepQuantities} setPrepQuantities={setPrepQuantities} /></div>
@@ -89,6 +89,7 @@ function Dashboard({ user, onLogout }) {
   </div>;
 }
 
+const greeting = () => { const h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'; };
 const initials = (name) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join('') || 'U';
 
 export default function App() {

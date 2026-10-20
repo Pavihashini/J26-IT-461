@@ -71,6 +71,7 @@ export default function StockPlannerPanel({ selectedDate }) {
   const blocked = plan?.dishes.filter((dish) => dish.max_portions === 0) || [];
 
   return <Panel title={title} subtitle={subtitle}>
+    <div className="stock-planner">
     <div className="model-form">
       <label><span>Restaurant</span>
         <select value={restaurant} onChange={(event) => setRestaurant(event.target.value)}>
@@ -122,5 +123,6 @@ export default function StockPlannerPanel({ selectedDate }) {
     </div>
 
     <div className="chart-footnote">Purchase amounts compare stock with the trained model’s expected use for the selected day ({options.metrics?.warning || 'simulated training data'}). Dish recipes use planning assumptions per portion.</div>
+    </div>
   </Panel>;
 }

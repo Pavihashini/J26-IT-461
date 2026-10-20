@@ -79,7 +79,7 @@ function RiskOverview({ onOpenFinancials }) {
         <table className="inventory-table">
           <thead><tr><th>Ingredient</th><th>Current stock</th><th>Expiry</th><th>Expected use / 7d</th><th>Waste risk</th><th>Status</th></tr></thead>
           <tbody>{ingredientCatalog.map((item) => (
-            <tr className={selectedId === item.id ? 'selected-row' : ''} key={item.id} onClick={() => setSelectedId(item.id)} tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setSelectedId(item.id); }}>
+            <tr className={selectedId === item.id ? 'selected-row' : ''} data-risk={item.risk} key={item.id} onClick={() => setSelectedId(item.id)} tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setSelectedId(item.id); }}>
               <td><div className="table-primary">{item.name}</div><div className="table-secondary">Unit cost {formatLKR(item.costPerUnit)} / {item.unit}</div></td>
               <td><strong>{item.stock}</strong> <span className="muted">{item.unit}</span></td>
               <td><div className="table-primary">{item.expiryInDays === 0 ? 'Today' : `${item.expiryInDays} days`}</div><div className="table-secondary">Remaining shelf life</div></td>
