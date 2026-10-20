@@ -783,3 +783,29 @@ tbody tr:hover { background: #fbfcfa; }
   .inventory-theme .alert-row > .status-badge, .inventory-theme .alert-arrow { display: none; }
   .inventory-theme .alert-content small { font-size: 11px; }
 }
+
+/* Add / delete inventory items */
+.inventory-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
+.inventory-actions .button-primary { border-radius: 999px; padding: 9px 18px; font-size: 12px; }
+.add-item-form { margin-bottom: 20px; padding: 20px 22px; border: 1px solid #efe4c8; border-radius: 18px; background: linear-gradient(135deg, #fffaf0 0%, #fbf3e1 100%); }
+.add-item-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.add-item-head strong { font-family: Georgia, 'Segoe UI', serif; font-size: 17px; color: #23402f; }
+.add-item-close { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 50%; background: #f3ead2; color: #8a5a2b; cursor: pointer; }
+.add-item-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.add-item-grid label { display: flex; flex-direction: column; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: #8a5a2b; }
+.add-item-grid label.wide { grid-column: span 2; }
+.add-item-grid input, .add-item-grid select { border: 1px solid #e3cfa6; border-radius: 999px; padding: 10px 16px; font-size: 14px; color: #2d4e38; background: #fffdf8; min-width: 0; text-transform: none; letter-spacing: 0; font-weight: 500; }
+.add-item-grid input:focus, .add-item-grid select:focus { outline: 2px solid rgba(60,138,91,.35); outline-offset: 1px; border-color: #3c8a5b; }
+.add-item-error { margin: 12px 0 0; color: #b64943; font-size: 13px; font-weight: 600; }
+.add-item-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+.add-item-actions .button-primary, .add-item-actions .button-secondary { border-radius: 999px; padding: 10px 20px; font-size: 13px; }
+.inventory-table .row-actions { width: 56px; text-align: right; }
+.delete-item { display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 50%; background: transparent; color: #b8a98a; cursor: pointer; transition: background .15s ease, color .15s ease; }
+.inventory-table tbody tr:hover .delete-item, .delete-item:focus-visible { color: #b64943; background: #fbe6e0; }
+.delete-item:hover { background: #b64943 !important; color: #fff !important; }
+.inventory-empty { text-align: center; padding: 32px 16px !important; color: #8d8a7c; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 640px) {
+  .add-item-grid { grid-template-columns: 1fr 1fr; }
+  .add-item-form { padding: 16px 14px; }
+}

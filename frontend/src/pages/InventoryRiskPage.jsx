@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { AlertTriangle, ArrowDownRight, ArrowUpRight, CalendarClock, CheckCircle2, CircleDollarSign, ClipboardList, Coins, Info, Leaf, Package, ShieldAlert, ShoppingCart, TrendingDown, Wallet } from 'lucide-react';
+import { AlertTriangle, ArrowDownRight, ArrowUpRight, CalendarClock, CheckCircle2, CircleDollarSign, ClipboardList, Coins, Info, Leaf, Package, Plus, ShieldAlert, ShoppingCart, Trash2, TrendingDown, Wallet, X } from 'lucide-react';
 import { ingredientCatalog } from '../data/mockData.js';
 import { dayDifference, formatDate, formatLKR, sumBy } from '../utils.js';
 import StockPlannerPanel from '../components/StockPlannerPanel.jsx';
@@ -11,6 +11,79 @@ const periodOptions = [
   { id: 'week', label: '7 days' },
   { id: 'month', label: '30 days' },
 ];
+
+const INVENTORY_STORAGE_KEY = 'inventory-items-v1';
+const UNIT_OPTIONS = ['kg', 'L', 'units'];
+const emptyItemForm = { name: '', unit: 'kg', costPerUnit: '', stock: '', expiryInDays: '', expectedUsage: '' };
+
+function loadInventory() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(INVENTORY_STORAGE_KEY));
+    if (Array.isArray(saved)) return saved;
+  } catch { /* fall back to the demo catalogue */ }
+  return ingredientCatalog;
+}
+
+// Derives the demonstration risk fields from the values an admin enters.
+function buildInventoryItem(form) {
+  const stock = Math.max(0, Number(form.stock) || 0);
+  const expiryInDays = Math.max(0, Math.round(Number(form.expiryInDays) || 0));
+  const expectedUsage = Math.max(0, Number(form.expectedUsage) || 0);
+  const expectedUsageBeforeExpiry = Math.round(expectedUsage * Math.min(1, expiryInDays / 7) * 10) / 10;
+  const surplus = Math.max(0, stock - expectedUsageBeforeExpiry);
+  const expiryPoints = expiryInDays <= 1 ? 55 : expiryInDays <= 3 ? 45 : expiryInDays <= 7 ? 30 : expiryInDays <= 14 ? 15 : 5;
+  const riskScore = Math.min(100, Math.round(expiryPoints + (stock > 0 ? (surplus / stock) * 40 : 0)));
+  const risk = riskScore >= 70 ? 'High' : riskScore >= 40 ? 'Medium' : 'Low';
+  const understock = stock < expectedUsage;
+  const overstock = stock > expectedUsageBeforeExpiry * 1.25 && expiryInDays <= 14;
+  const flags = [expiryInDays <= 3 && 'Near expiry', overstock && 'overstock', understock && 'Understock'].filter(Boolean);
+  const factors = [
+    expiryInDays <= 1 ? 'Expiry is tomorrow or sooner' : expiryInDays <= 7 ? `Expiry is within ${expiryInDays} days` : 'Remaining shelf life is comfortable',
+    surplus > 0 ? `About ${Math.round(surplus * 10) / 10} ${form.unit} may remain beyond expected use` : 'Stock is within expected use',
+    understock ? 'Forecast use exceeds current stock' : 'No recorded waste for this new item',
+  ];
+  return {
+    id: `item-${Date.now().toString(36)}`,
+    name: form.name.trim(),
+    unit: form.unit,
+    costPerUnit: Math.max(0, Number(form.costPerUnit) || 0),
+    stock,
+    expiryInDays,
+    expectedUsage,
+    expectedUsageBeforeExpiry,
+    historicalWaste: 0,
+    riskScore,
+    risk,
+    status: flags.length ? flags.join(' · ') : 'In range',
+    factors,
+    recommendation: risk === 'High' ? 'Use this stock first, review the next purchase, and prioritise dishes that use it.' : risk === 'Medium' ? 'Monitor daily usage and avoid increasing the next order.' : 'Maintain the current purchasing rhythm and rotate by delivery date.',
+  };
+}
+
+function AddItemForm({ onAdd, onClose }) {
+  const [form, setForm] = useState(emptyItemForm);
+  const [error, setError] = useState('');
+  const set = (key) => (event) => setForm((previous) => ({ ...previous, [key]: event.target.value }));
+  const submit = (event) => {
+    event.preventDefault();
+    if (!form.name.trim()) return setError('Enter an item name.');
+    if ([form.costPerUnit, form.stock, form.expiryInDays, form.expectedUsage].some((value) => value === '')) return setError('Fill in cost, stock, days to expiry and expected use.');
+    onAdd(buildInventoryItem(form));
+  };
+  return <form className="add-item-form" onSubmit={submit}>
+    <div className="add-item-head"><strong>Add inventory item</strong><button type="button" className="add-item-close" onClick={onClose} aria-label="Close form"><X size={16} /></button></div>
+    <div className="add-item-grid">
+      <label className="wide"><span>Item name</span><input type="text" value={form.name} onChange={set('name')} placeholder="e.g. Green chilli" autoFocus /></label>
+      <label><span>Unit</span><select value={form.unit} onChange={set('unit')}>{UNIT_OPTIONS.map((unit) => <option key={unit} value={unit}>{unit}</option>)}</select></label>
+      <label><span>Unit cost (LKR)</span><input type="number" min="0" step="any" value={form.costPerUnit} onChange={set('costPerUnit')} placeholder="0" /></label>
+      <label><span>Current stock</span><input type="number" min="0" step="any" value={form.stock} onChange={set('stock')} placeholder="0" /></label>
+      <label><span>Days to expiry</span><input type="number" min="0" step="1" value={form.expiryInDays} onChange={set('expiryInDays')} placeholder="0" /></label>
+      <label><span>Expected use / 7d</span><input type="number" min="0" step="any" value={form.expectedUsage} onChange={set('expectedUsage')} placeholder="0" /></label>
+    </div>
+    {error && <p className="add-item-error" role="alert">{error}</p>}
+    <div className="add-item-actions"><button type="button" className="button-secondary" onClick={onClose}>Cancel</button><button type="submit" className="button-primary"><Plus size={15} /> Add item</button></div>
+  </form>;
+}
 
 function costFor(record) {
   return Math.max(0, Number(record.quantity) || 0) * Math.max(0, Number(record.unitCost) || 0);
@@ -34,23 +107,24 @@ function BarLine({ label, value, max, valueLabel, subLabel }) {
   </div>;
 }
 
-function RiskOverview({ onOpenFinancials }) {
+function RiskOverview({ onOpenFinancials, items, onAddItem, onDeleteItem }) {
   const [selectedId, setSelectedId] = useState('chicken');
-  const selected = ingredientCatalog.find((item) => item.id === selectedId) || ingredientCatalog[0];
-  const highCount = ingredientCatalog.filter((item) => item.risk === 'High').length;
-  const mediumCount = ingredientCatalog.filter((item) => item.risk === 'Medium').length;
-  const understockCount = ingredientCatalog.filter((item) => item.status.toLowerCase().includes('understock')).length;
+  const [showForm, setShowForm] = useState(false);
+  const selected = items.find((item) => item.id === selectedId) || items[0];
+  const highCount = items.filter((item) => item.risk === 'High').length;
+  const mediumCount = items.filter((item) => item.risk === 'Medium').length;
+  const understockCount = items.filter((item) => item.status.toLowerCase().includes('understock')).length;
   const alertRows = useMemo(() => {
     const rows = [];
-    ingredientCatalog.forEach((item) => {
+    items.forEach((item) => {
       if (item.expiryInDays <= 3) rows.push({ id: `${item.id}-expiry`, item, type: 'Near expiry', message: `Expiry in ${item.expiryInDays} day${item.expiryInDays === 1 ? '' : 's'}; compare stock with expected use.`, tone: 'orange' });
       if (item.riskScore >= 70) rows.push({ id: `${item.id}-risk`, item, type: 'High waste risk', message: item.riskScore >= 85 ? 'Stock, shelf life, and historical waste signals combine to elevate risk.' : 'Expiry and projected usage suggest preventable waste exposure.', tone: 'red' });
       if (item.stock > item.expectedUsageBeforeExpiry * 1.25 && item.expiryInDays <= 14) rows.push({ id: `${item.id}-overstock`, item, type: 'Overstock', message: `${item.stock} ${item.unit} on hand vs. ${item.expectedUsageBeforeExpiry} ${item.unit} expected use before expiry.`, tone: 'orange' });
       if (item.stock < item.expectedUsage) rows.push({ id: `${item.id}-understock`, item, type: 'Understock', message: `Forecast usage (${item.expectedUsage} ${item.unit}) exceeds stock (${item.stock} ${item.unit}).`, tone: 'blue' });
     });
     return rows;
-  }, []);
-  const riskExposure = ingredientCatalog.reduce((sum, item) => {
+  }, [items]);
+  const riskExposure = items.reduce((sum, item) => {
     const quantityAtRisk = item.expiryInDays <= 7 ? Math.max(0, item.stock - item.expectedUsageBeforeExpiry) : 0;
     return sum + quantityAtRisk * item.costPerUnit;
   }, 0);
@@ -74,11 +148,12 @@ function RiskOverview({ onOpenFinancials }) {
       </div>
     </Panel>
 
-    <Panel title="Ingredient inventory" subtitle="Select an ingredient to see the factors behind its simulated risk score." action={<span className="micro-tag">Illustrative scores · 0–100</span>}>
+    <Panel title="Ingredient inventory" subtitle="Select an ingredient to see the factors behind its simulated risk score." action={<div className="inventory-actions"><span className="micro-tag">Illustrative scores · 0–100</span><button type="button" className="button-primary" onClick={() => setShowForm((open) => !open)}><Plus size={15} /> Add item</button></div>}>
+      {showForm && <AddItemForm onClose={() => setShowForm(false)} onAdd={(item) => { onAddItem(item); setSelectedId(item.id); setShowForm(false); }} />}
       <div className="table-wrap">
         <table className="inventory-table">
-          <thead><tr><th>Ingredient</th><th>Current stock</th><th>Expiry</th><th>Expected use / 7d</th><th>Waste risk</th><th>Status</th></tr></thead>
-          <tbody>{ingredientCatalog.map((item) => (
+          <thead><tr><th>Ingredient</th><th>Current stock</th><th>Expiry</th><th>Expected use / 7d</th><th>Waste risk</th><th>Status</th><th><span className="sr-only">Actions</span></th></tr></thead>
+          <tbody>{items.length === 0 && <tr><td colSpan={7} className="inventory-empty">No inventory items yet. Use “Add item” to start tracking stock.</td></tr>}{items.map((item) => (
             <tr className={selectedId === item.id ? 'selected-row' : ''} data-risk={item.risk} key={item.id} onClick={() => setSelectedId(item.id)} tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setSelectedId(item.id); }}>
               <td><div className="table-primary">{item.name}</div><div className="table-secondary">Unit cost {formatLKR(item.costPerUnit)} / {item.unit}</div></td>
               <td><strong>{item.stock}</strong> <span className="muted">{item.unit}</span></td>
@@ -86,13 +161,14 @@ function RiskOverview({ onOpenFinancials }) {
               <td>{item.expectedUsage} <span className="muted">{item.unit}</span></td>
               <td><div className="risk-cell"><strong>{item.riskScore}</strong><div className="risk-meter"><span className={riskTone(item.risk)} style={{ width: `${item.riskScore}%` }} /></div><StatusBadge tone={riskTone(item.risk)}>{item.risk}</StatusBadge></div></td>
               <td><StatusBadge tone={item.status.toLowerCase().includes('understock') ? 'blue' : item.risk === 'High' ? 'red' : item.risk === 'Medium' ? 'orange' : 'green'}>{item.status}</StatusBadge></td>
+              <td className="row-actions"><button type="button" className="delete-item" title={`Delete ${item.name}`} aria-label={`Delete ${item.name}`} onClick={(event) => { event.stopPropagation(); if (window.confirm(`Delete "${item.name}" from the inventory list?`)) onDeleteItem(item.id); }} onKeyDown={(event) => event.stopPropagation()}><Trash2 size={16} /></button></td>
             </tr>
           ))}</tbody>
         </table>
       </div>
     </Panel>
 
-    <div className="two-column-grid">
+    {selected && <div className="two-column-grid">
       <Panel title={`${selected.name}: risk explanation`} subtitle="Why this item received its current classification.">
         <div className="selected-risk-score"><div className={`big-score ${riskTone(selected.risk)}`}>{selected.riskScore}<small>/100</small></div><div><StatusBadge tone={riskTone(selected.risk)}>{selected.risk} waste risk</StatusBadge><p>Simulated, rule-informed demonstration score — not a trained model output.</p></div></div>
         <div className="factor-list">{selected.factors.map((factor, index) => <div className="factor-item" key={factor}><span>{String(index + 1).padStart(2, '0')}</span>{factor}</div>)}</div>
@@ -105,7 +181,7 @@ function RiskOverview({ onOpenFinancials }) {
           <div className="recommendation-item"><span className="recommendation-icon green"><CheckCircle2 size={17} /></span><div><strong>Apply FEFO rotation</strong><p>Use first-expiring stock first and monitor repeated waste in the historical records.</p></div></div>
         </div>
       </Panel>
-    </div>
+    </div>}
 
     <Panel title="Generated inventory alerts" subtitle={`${alertRows.length} demonstration alerts across the current inventory records.`}>
       <div className="alert-list">
@@ -121,7 +197,7 @@ function RiskOverview({ onOpenFinancials }) {
   </div>;
 }
 
-function FinancialAnalysis({ wasteRecords, setWasteRecords }) {
+function FinancialAnalysis({ wasteRecords, setWasteRecords, items }) {
   const [period, setPeriod] = useState('month');
   const [reductionPercent, setReductionPercent] = useState(20);
   const filtered = useMemo(() => filterRecords(wasteRecords, period), [wasteRecords, period]);
@@ -154,18 +230,18 @@ function FinancialAnalysis({ wasteRecords, setWasteRecords }) {
     return [...grouped.entries()].sort(([dateA], [dateB]) => dateA.localeCompare(dateB)).map(([date, value]) => ({ date, value }));
   }, [filtered]);
 
-  const inventoryRisk = useMemo(() => ingredientCatalog.map((item) => {
+  const inventoryRisk = useMemo(() => items.map((item) => {
     const atRiskQuantity = item.expiryInDays <= 7 ? Math.max(0, item.stock - item.expectedUsageBeforeExpiry) : 0;
     return { ...item, atRiskQuantity, atRiskValue: atRiskQuantity * item.costPerUnit };
-  }).filter((item) => item.atRiskValue > 0).sort((a, b) => b.atRiskValue - a.atRiskValue), []);
+  }).filter((item) => item.atRiskValue > 0).sort((a, b) => b.atRiskValue - a.atRiskValue), [items]);
   const inventoryRiskTotal = sumBy(inventoryRisk, (item) => item.atRiskValue);
 
-  const priorities = useMemo(() => ingredientCatalog.map((item) => {
+  const priorities = useMemo(() => items.map((item) => {
     const recordedLoss = sumBy(filtered.filter((record) => record.itemId === item.id), costFor);
     const atRiskQuantity = item.expiryInDays <= 7 ? Math.max(0, item.stock - item.expectedUsageBeforeExpiry) : 0;
     const atRiskValue = atRiskQuantity * item.costPerUnit;
     return { item, recordedLoss, atRiskValue, rankScore: recordedLoss + atRiskValue };
-  }).filter((entry) => entry.rankScore > 0).sort((a, b) => b.rankScore - a.rankScore).slice(0, 4), [filtered]);
+  }).filter((entry) => entry.rankScore > 0).sort((a, b) => b.rankScore - a.rankScore).slice(0, 4), [filtered, items]);
 
   const updateRecord = (id, key, value) => {
     const num = value === '' ? '' : Math.max(0, Number(value) || 0);
@@ -251,6 +327,12 @@ function FinancialAnalysis({ wasteRecords, setWasteRecords }) {
 
 export default function InventoryRiskPage({ wasteRecords, setWasteRecords, selectedDate }) {
   const [section, setSection] = useState('risk');
+  const [items, setItems] = useState(loadInventory);
+  const updateItems = (updater) => setItems((previous) => {
+    const next = updater(previous);
+    try { localStorage.setItem(INVENTORY_STORAGE_KEY, JSON.stringify(next)); } catch { /* storage unavailable */ }
+    return next;
+  });
   return <div className="page-stack inventory-theme">
     <PageHeading
       eyebrow="Component 02 · Detect risk before food is lost"
@@ -259,6 +341,6 @@ export default function InventoryRiskPage({ wasteRecords, setWasteRecords, selec
       actions={<div className="section-switch"><button type="button" className={section === 'risk' ? 'active' : ''} onClick={() => setSection('risk')}><ShieldAlert size={15} /> Risk overview</button><button type="button" className={section === 'finance' ? 'active' : ''} onClick={() => setSection('finance')}><CircleDollarSign size={15} /> Cost &amp; savings</button></div>}
     />
     {section === 'risk' && <StockPlannerPanel selectedDate={selectedDate} />}
-    {section === 'risk' ? <RiskOverview onOpenFinancials={() => setSection('finance')} /> : <FinancialAnalysis wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} />}
+    {section === 'risk' ? <RiskOverview onOpenFinancials={() => setSection('finance')} items={items} onAddItem={(item) => updateItems((previous) => [...previous, item])} onDeleteItem={(id) => updateItems((previous) => previous.filter((item) => item.id !== id))} /> : <FinancialAnalysis wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} items={items} />}
   </div>;
 }
