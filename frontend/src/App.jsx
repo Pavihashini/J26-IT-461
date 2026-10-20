@@ -72,7 +72,7 @@ function Dashboard({ user, onLogout }) {
     <main className="main-shell">
       <header className="topbar">
         <div className="breadcrumb"><LayoutDashboard size={15} /><span>Workspace</span><span className="crumb-divider">/</span><strong>{activeSection.label}</strong></div>
-        <div className="topbar-right"><span className={`backend-status ${backendStatus}`} role="status"><span className="backend-status-dot" /> {backendStatusLabel}</span><span className="demo-chip"><span className="demo-chip-dot" /> DEMO DATA</span>{user.role === 'admin' && <button className="icon-button" type="button" title="Demo alerts are shown in the selected component" onClick={() => setActiveTab('inventory')}><Bell size={18} /><span className="notification-dot" /></button>}<div className="profile-summary"><span className="profile-avatar">{initials(user.full_name)}</span><div><strong>{user.full_name}</strong><small>{user.role === 'admin' ? 'Restaurant admin' : 'Registered user'}</small></div><button className="icon-button" type="button" title="Log out" aria-label="Log out" onClick={onLogout}><LogOut size={17} /></button></div></div>
+        <div className="topbar-right"><ServiceClock /><span className={`backend-status ${backendStatus}`} role="status"><span className="backend-status-dot" /> {backendStatusLabel}</span><span className="demo-chip"><span className="demo-chip-dot" /> DEMO DATA</span>{user.role === 'admin' && <button className="icon-button" type="button" title="Demo alerts are shown in the selected component" onClick={() => setActiveTab('inventory')}><Bell size={18} /><span className="notification-dot" /></button>}<div className="profile-summary"><span className="profile-avatar">{initials(user.full_name)}</span><div><strong>{user.full_name}</strong><small>{user.role === 'admin' ? 'Restaurant admin' : 'Registered user'}</small></div><button className="icon-button" type="button" title="Log out" aria-label="Log out" onClick={onLogout}><LogOut size={17} /></button></div></div>
       </header>
 
       <div className="content-area">
@@ -87,6 +87,17 @@ function Dashboard({ user, onLogout }) {
       <footer className="app-footer"><span>Root &amp; Reuse · Research prototype</span><span><i /> Frontend simulation only</span><span>J26 · IT · 461</span></footer>
     </main>
   </div>;
+}
+
+const servicePeriod = (hour) => hour < 6 ? 'Prep time' : hour < 11 ? 'Breakfast service' : hour < 15 ? 'Lunch service' : hour < 18 ? 'Afternoon prep' : hour < 22 ? 'Dinner service' : 'Kitchen closing';
+
+function ServiceClock() {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 30000);
+    return () => clearInterval(timer);
+  }, []);
+  return <span className="service-clock"><ChefHat size={15} /><span><strong>{servicePeriod(now.getHours())}</strong><small>{now.toLocaleTimeString('en-LK', { hour: 'numeric', minute: '2-digit' })}</small></span></span>;
 }
 
 const greeting = () => { const h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'; };
