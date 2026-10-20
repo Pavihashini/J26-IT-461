@@ -58,7 +58,7 @@ export default function DemandForecastPage({ selectedDate, setSelectedDate, prep
   };
 
   return (
-    <div className="page-stack">
+    <div className="page-stack demand-theme">
       <PageHeading
         eyebrow="Component 01 · Plan before you prepare"
         title="Demand forecasting"

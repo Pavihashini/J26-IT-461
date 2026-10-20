@@ -604,3 +604,24 @@ tbody tr:hover { background: #fbfcfa; }
   .welcome-date-card { min-width: 0; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 12px 14px; }
   .welcome-date-card strong { font-size: 16px; }
 }
+
+/* Demand forecasting: restaurant theme (scoped to this page) */
+.demand-theme .page-heading { position: relative; padding: 4px 0 6px; }
+.demand-theme .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: #8a5a2b; letter-spacing: 1.4px; }
+.demand-theme .eyebrow::before { content: ''; width: 26px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, #b8743a, rgba(184, 116, 58, .15)); }
+.demand-theme .page-heading h1 { font-family: Georgia, 'Segoe UI', serif; color: #23402f; font-weight: 700; letter-spacing: -.6px; }
+.demand-theme .page-heading h1::after { content: ''; display: block; width: 54px; height: 3px; margin-top: 10px; border-radius: 3px; background: linear-gradient(90deg, #3c8a5b, #b8743a); }
+.demand-theme .page-heading p { color: #6b756a; font-size: 13px; }
+.demand-theme .date-control { background: #fffaf2; border-color: #f0dcc0; color: #8a5a2b; box-shadow: 0 4px 12px rgba(120, 80, 30, .06); }
+.demand-theme .date-control span { color: #8a5a2b; font-weight: 700; }
+.demand-theme .stat-card { --accent: #3c8a5b; position: relative; overflow: hidden; border: 1px solid #ece6d6; border-top: 4px solid var(--accent); border-radius: 16px; padding: 18px 18px 16px; background: linear-gradient(160deg, #ffffff 0%, #fbf8f0 100%); box-shadow: 0 8px 20px rgba(80, 60, 30, .06); transition: transform .18s ease, box-shadow .18s ease; }
+.demand-theme .stat-card::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: 0; height: 0; border-bottom: 2px dotted rgba(138, 106, 61, .22); }
+.demand-theme .stat-card:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(80, 60, 30, .1); }
+.demand-theme .stat-card:has(.stat-icon.orange) { --accent: #c9823d; }
+.demand-theme .stat-card:has(.stat-icon.purple) { --accent: #8a6bb8; }
+.demand-theme .stat-card:has(.stat-icon.blue) { --accent: #4a86ad; }
+.demand-theme .stat-icon { width: 44px; height: 44px; flex-basis: 44px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7), 0 3px 8px rgba(60, 50, 30, .08); }
+.demand-theme .stat-label { color: #8a5a2b; font-size: 10px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; }
+.demand-theme .stat-value { font-family: Georgia, 'Segoe UI', serif; font-weight: 700; color: #23402f; }
+.demand-theme .stat-detail { color: #8d8a7c; padding-bottom: 6px; }
+@media (prefers-reduced-motion: reduce) { .demand-theme .stat-card { transition: none; } .demand-theme .stat-card:hover { transform: none; } }
