@@ -4,7 +4,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes.auth import router as auth_router
-from app.api.routes.bids import router as bids_router
 from app.api.routes.forecast import router as forecast_router
 
 
@@ -15,7 +14,7 @@ async def lifespan(_: FastAPI):
 
     from app.db.base import Base
     from app.db.session import engine
-    from app.models import bid as _bid, user as _user  # noqa: F401  (registers the tables)
+    from app.models import user as _user  # noqa: F401  (registers the table)
 
     try:
         Base.metadata.create_all(engine)
@@ -52,7 +51,6 @@ app.add_middleware(
 
 
 app.include_router(auth_router)
-app.include_router(bids_router)
 app.include_router(forecast_router)
 
 

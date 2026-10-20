@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Activity, ArrowRight, BadgeCheck, Clock3, Gavel, PackageCheck, ShieldCheck, ShoppingBag, TimerReset, Trophy } from 'lucide-react';
 import { initialSurplusListings, ingredientCatalog } from '../data/mockData.js';
 import { formatLKR, timeRemaining } from '../utils.js';
-import { submitBid } from '../services/api.js';
 import { FlowStrip, Notice, PageHeading, Panel, StatusBadge } from '../components/Shared.jsx';
 
 function clockNow() {
@@ -41,7 +40,7 @@ export default function SurplusBiddingPage({ isActive = true }) {
     setBidSuccess('');
   };
 
-  const placeBid = async (event) => {
+  const placeBid = (event) => {
     event.preventDefault();
     const amount = Number(bidInput);
     if (selected.status !== 'open' || selected.remainingSeconds <= 0) {
@@ -54,17 +53,10 @@ export default function SurplusBiddingPage({ isActive = true }) {
       setBidSuccess('');
       return;
     }
-    try {
-      await submitBid(selected.id, selected.name, amount);
-    } catch (reason) {
-      setBidError(`Your bid could not be saved: ${reason.message}`);
-      setBidSuccess('');
-      return;
-    }
     const bid = { id: `local-${Date.now()}`, bidder: 'You (demo)', amount, at: clockNow() };
     setListings((previous) => previous.map((listing) => listing.id === selected.id ? { ...listing, highestBid: amount, bids: [bid, ...listing.bids] } : listing));
     setBidError('');
-    setBidSuccess(`Your bid of ${formatLKR(amount)} was placed and sent to the restaurant.`);
+    setBidSuccess(`Your mock bid of ${formatLKR(amount)} was added to this local demonstration.`);
   };
 
   const closeSelected = () => {

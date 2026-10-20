@@ -119,19 +119,3 @@ export function registerUser(fullName, email, password) {
 export function fetchCurrentUser() {
   return requestJson('/api/auth/me');
 }
-
-export function submitBid(listingId, listingName, amount) {
-  return requestJson('/api/bids', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ listing_id: listingId, listing_name: listingName, amount }),
-  });
-}
-
-export function fetchConsumptionForecast(payload) {
-  return requestJson('/api/forecast/consumption', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-}
