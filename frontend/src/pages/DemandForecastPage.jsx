@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { CalendarDays, ChefHat, CloudSun, Gauge, Leaf, Plus, Minus, ShoppingBasket, Sparkles, TrendingUp } from 'lucide-react';
 import { initialDishes, ingredientCatalog, todayISO } from '../data/mockData.js';
 import { formatDate } from '../utils.js';
+import IngredientForecastPanel from '../components/IngredientForecastPanel.jsx';
 import { FlowStrip, Notice, PageHeading, Panel, StatCard, StatusBadge } from '../components/Shared.jsx';
 
 const ingredientById = Object.fromEntries(ingredientCatalog.map((item) => [item.id, item]));
@@ -143,7 +144,9 @@ export default function DemandForecastPage({ selectedDate, setSelectedDate, prep
         </div>
       </Panel>
 
-      <Notice>All forecasts, guest counts, recipe quantities, and context signals are demonstration data. A production version would receive historical POS, weather, holiday, and event data through the model service described in the presentation.</Notice>
+      <IngredientForecastPanel selectedDate={selectedDate} />
+
+      <Notice>The dish forecasts, guest counts, and recipe quantities above are demonstration data. The ingredient quantity prediction is produced by a Random Forest Regressor trained on simulated data, so it demonstrates the method rather than proving real-world accuracy.</Notice>
     </div>
   );
 }
