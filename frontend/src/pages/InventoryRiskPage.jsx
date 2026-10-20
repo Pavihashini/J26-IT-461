@@ -251,7 +251,7 @@ function FinancialAnalysis({ wasteRecords, setWasteRecords }) {
 
 export default function InventoryRiskPage({ wasteRecords, setWasteRecords, selectedDate }) {
   const [section, setSection] = useState('risk');
-  return <div className="page-stack">
+  return <div className="page-stack inventory-theme">
     <PageHeading
       eyebrow="Component 02 · Detect risk before food is lost"
       title="Inventory & waste risk"
