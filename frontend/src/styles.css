@@ -625,3 +625,75 @@ tbody tr:hover { background: #fbfcfa; }
 .demand-theme .stat-value { font-family: Georgia, 'Segoe UI', serif; font-weight: 700; color: #23402f; }
 .demand-theme .stat-detail { color: #8d8a7c; padding-bottom: 6px; }
 @media (prefers-reduced-motion: reduce) { .demand-theme .stat-card { transition: none; } .demand-theme .stat-card:hover { transform: none; } }
+
+/* Demand forecasting: restaurant theme for the two top panels (scoped) */
+.demand-theme .forecast-top-grid > .panel { position: relative; overflow: hidden; border: 1px solid #ece6d6; border-radius: 18px; background: linear-gradient(165deg, #ffffff 0%, #fbf8f0 100%); box-shadow: 0 10px 26px rgba(80, 60, 30, .06); }
+.demand-theme .forecast-top-grid > .panel::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: linear-gradient(90deg, #3c8a5b, #b8743a); }
+.demand-theme .forecast-top-grid .panel-heading h2 { font-family: Georgia, 'Segoe UI', serif; font-size: 17px; font-weight: 700; color: #23402f; letter-spacing: -.3px; }
+.demand-theme .forecast-top-grid .panel-heading p { color: #8d8a7c; font-size: 11px; }
+.demand-theme .forecast-top-grid .panel-heading { padding-bottom: 12px; border-bottom: 1px dashed #e3d8bf; }
+.demand-theme .forecast-top-grid .micro-tag { color: #8a5a2b; background: #fbeed9; border-color: #f0d5ae; font-size: 9px; }
+.demand-theme .forecast-top-grid .micro-tag .dot-green { background: #c9823d; }
+
+.demand-theme .chart-legend { font-size: 10px; color: #8d8a7c; }
+.demand-theme .legend-box { width: 10px; height: 10px; border-radius: 3px; }
+.demand-theme .legend-box.historical { background: #e6dcc3; }
+.demand-theme .dish-chart-list { gap: 4px; }
+.demand-theme .dish-chart-row { grid-template-columns: minmax(120px, 1.05fr) minmax(130px, 1.45fr) 62px; padding: 11px 10px; border-radius: 12px; border-bottom: 1px dotted #e6dcc3; transition: background .15s ease; }
+.demand-theme .dish-chart-row:hover { background: #f6efdd; }
+.demand-theme .dish-chart-row:last-child { border-bottom: 0; }
+.demand-theme .dish-chart-name strong { font-family: Georgia, 'Segoe UI', serif; font-size: 13px; font-weight: 700; color: #2b4636; }
+.demand-theme .dish-chart-name span { display: inline-block; margin-top: 5px; padding: 2px 8px; font-size: 9px; color: #8a5a2b; background: #fbeed9; border-radius: 999px; }
+.demand-theme .dish-bars { gap: 7px; }
+.demand-theme .bar-line { grid-template-columns: minmax(0, 1fr) 26px; }
+.demand-theme .bar-line > span { font-size: 10px; font-weight: 700; color: #7a7664; }
+.demand-theme .bar { height: 10px; border-radius: 999px; }
+.demand-theme .bar.historical { background: #e6dcc3; }
+.demand-theme .bar.predicted { background: linear-gradient(90deg, #5a9b69, #3c8a5b 70%, #b8743a); }
+.demand-theme .change-label { justify-self: end; display: inline-flex; align-items: center; gap: 3px; padding: 4px 9px; font-size: 10px; font-weight: 800; color: #2f7a4b; background: #e6f2e4; border-radius: 999px; }
+.demand-theme .change-label::before { content: '\25B2'; font-size: 7px; }
+.demand-theme .forecast-top-grid .chart-footnote { color: #8d8a7c; font-style: italic; border-top: 1px dashed #e3d8bf; }
+
+.demand-theme .signal-row { align-items: center; gap: 13px; padding: 13px 8px; border-bottom: 1px dotted #e6dcc3; border-radius: 12px; transition: background .15s ease; }
+.demand-theme .signal-row:last-child { padding-bottom: 13px; }
+.demand-theme .signal-row:hover { background: #f6efdd; }
+.demand-theme .signal-icon { width: 38px; height: 38px; flex-basis: 38px; border-radius: 50%; box-shadow: 0 3px 8px rgba(60, 50, 30, .08); }
+.demand-theme .signal-row:nth-child(1) .signal-icon { color: #b8743a; background: #fbeed9; }
+.demand-theme .signal-row:nth-child(2) .signal-icon { color: #3c8a5b; background: #e6f2e4; }
+.demand-theme .signal-row:nth-child(3) .signal-icon { color: #4a86ad; background: #e4f0f9; }
+.demand-theme .signal-row:nth-child(4) .signal-icon { color: #b0564f; background: #fbe8e5; }
+.demand-theme .signal-row:nth-child(5) .signal-icon { color: #8a6bb8; background: #efe9f8; }
+.demand-theme .signal-row strong { font-family: Georgia, 'Segoe UI', serif; font-size: 12px; color: #2b4636; margin: 0 0 4px; }
+.demand-theme .signal-row p { font-size: 10px; color: #8d8a7c; }
+@media (prefers-reduced-motion: reduce) { .demand-theme .dish-chart-row, .demand-theme .signal-row { transition: none; } }
+@media (max-width: 760px) {
+  .demand-theme .dish-chart-row { grid-template-columns: 97px minmax(0, 1fr) 48px; padding: 9px 4px; }
+  .demand-theme .dish-chart-name strong { font-size: 11px; }
+  .demand-theme .signal-icon { width: 32px; height: 32px; flex-basis: 32px; }
+}
+
+/* Demand forecasting: restaurant theme for the kitchen preparation panel (scoped) */
+.demand-theme > .panel:has(.quantity-stepper) { position: relative; overflow: hidden; border: 1px solid #ece6d6; border-radius: 18px; background: linear-gradient(165deg, #ffffff 0%, #fbf8f0 100%); box-shadow: 0 10px 26px rgba(80, 60, 30, .06); }
+.demand-theme > .panel:has(.quantity-stepper)::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: linear-gradient(90deg, #3c8a5b, #b8743a); }
+.demand-theme > .panel:has(.quantity-stepper) .panel-heading { padding-bottom: 12px; border-bottom: 1px dashed #e3d8bf; }
+.demand-theme > .panel:has(.quantity-stepper) .panel-heading h2 { font-family: Georgia, 'Segoe UI', serif; font-size: 17px; font-weight: 700; color: #23402f; letter-spacing: -.3px; }
+.demand-theme > .panel:has(.quantity-stepper) .panel-heading p { color: #8d8a7c; font-size: 11px; }
+
+.demand-theme > .panel:has(.quantity-stepper) thead th { color: #8a5a2b; font-size: 9px; letter-spacing: 1px; background: #f6efdd; border-top: 0; border-bottom: 2px dashed #e3cfa6; padding: 13px 14px; }
+.demand-theme > .panel:has(.quantity-stepper) thead th:first-child { border-radius: 12px 0 0 0; }
+.demand-theme > .panel:has(.quantity-stepper) thead th:last-child { border-radius: 0 12px 0 0; }
+.demand-theme > .panel:has(.quantity-stepper) tbody td { padding: 16px 14px; border-bottom: 1px dotted #e6dcc3; color: #6b6a5c; font-size: 11px; }
+.demand-theme > .panel:has(.quantity-stepper) tbody tr { transition: background .15s ease; }
+.demand-theme > .panel:has(.quantity-stepper) tbody tr:hover { background: #f6efdd; }
+.demand-theme > .panel:has(.quantity-stepper) .table-primary { font-family: Georgia, 'Segoe UI', serif; font-size: 14px; font-weight: 700; color: #2b4636; }
+.demand-theme > .panel:has(.quantity-stepper) .table-secondary { display: inline-block; margin-top: 6px; padding: 2px 9px; font-size: 9px; color: #8a5a2b; background: #fbeed9; border-radius: 999px; }
+.demand-theme > .panel:has(.quantity-stepper) tbody td strong { font-family: Georgia, 'Segoe UI', serif; font-size: 18px; color: #23402f; }
+.demand-theme > .panel:has(.quantity-stepper) .muted { color: #8d8a7c; font-size: 10px; }
+
+.demand-theme > .panel:has(.quantity-stepper) .quantity-stepper { width: 124px; height: 38px; border: 1px solid #e3cfa6; border-radius: 999px; background: #fffdf8; box-shadow: 0 3px 8px rgba(120, 80, 30, .06); }
+.demand-theme > .panel:has(.quantity-stepper) .quantity-stepper button { width: 36px; color: #8a5a2b; transition: background .15s ease, color .15s ease; }
+.demand-theme > .panel:has(.quantity-stepper) .quantity-stepper button:hover { background: #3c8a5b; color: #fff; }
+.demand-theme > .panel:has(.quantity-stepper) .quantity-stepper input { width: 52px; font-family: Georgia, 'Segoe UI', serif; font-size: 14px; color: #23402f; }
+.demand-theme > .panel:has(.quantity-stepper) .status-badge { border-radius: 999px; padding: 6px 11px; font-size: 10px; }
+.demand-theme > .panel:has(.quantity-stepper) .recommendation-cell { font-size: 11px; color: #8d8a7c; font-style: italic; }
+@media (prefers-reduced-motion: reduce) { .demand-theme > .panel:has(.quantity-stepper) tbody tr, .demand-theme > .panel:has(.quantity-stepper) .quantity-stepper button { transition: none; } }
