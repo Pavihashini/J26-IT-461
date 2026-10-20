@@ -4,6 +4,7 @@ import DemandForecastPage from './pages/DemandForecastPage.jsx';
 import InventoryRiskPage from './pages/InventoryRiskPage.jsx';
 import SurplusBiddingPage from './pages/SurplusBiddingPage.jsx';
 import AuthPage from './pages/AuthPage.jsx';
+import HomePage from './pages/HomePage.jsx';
 import WelcomeBanner from './components/WelcomeBanner.jsx';
 import { initialDishes, initialWasteRecords, isoDaysFromNow } from './data/mockData.js';
 import { fetchCurrentUser, fetchHealth, getStoredToken, setSessionToken } from './services/api.js';
@@ -94,6 +95,12 @@ const initials = (name) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((pa
 export default function App() {
   const [session, setSession] = useState({ status: getStoredToken() ? 'checking' : 'signed-out', user: null });
   const [notice, setNotice] = useState('');
+  const [view, setView] = useState('home');
+  const navigate = (next) => {
+    setNotice('');
+    setView(next);
+    window.scrollTo(0, 0);
+  };
 
   useEffect(() => {
     const token = getStoredToken();
@@ -116,6 +123,7 @@ export default function App() {
   const signOut = (message = '') => {
     setSessionToken(null);
     setNotice(message);
+    setView(message ? 'user-login' : 'home');
     setSession({ status: 'signed-out', user: null });
   };
 
@@ -130,9 +138,11 @@ export default function App() {
   }
 
   if (session.status === 'signed-out') {
-    return <AuthPage notice={notice} onAuthenticated={({ access_token: token, user }) => {
+    if (view === 'home') return <HomePage onNavigate={navigate} />;
+    return <AuthPage key={view} variant={view === 'admin-login' ? 'admin' : 'user'} notice={notice} onNavigate={navigate} onAuthenticated={({ access_token: token, user }) => {
       setSessionToken(token);
       setNotice('');
+      setView('home');
       setSession({ status: 'signed-in', user });
     }} />;
   }
