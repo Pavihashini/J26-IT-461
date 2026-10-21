@@ -760,3 +760,21 @@ tbody tr:hover { background: #fbfcfa; }
 .demand-theme > .panel:has(.model-form) .model-result .bar { height: 10px; border-radius: 999px; background: linear-gradient(90deg, #5a9b69, #3c8a5b 70%, #b8743a); }
 .demand-theme > .panel:has(.model-form) .chart-footnote { color: #8d8a7c; font-style: italic; border-top: 1px dashed #e3d8bf; }
 @media (prefers-reduced-motion: reduce) { .demand-theme > .panel:has(.model-form) tbody tr, .demand-theme > .panel:has(.model-form) .model-form .button-primary { transition: none; } }
+
+/* Weekly outlook with forecast range */
+.weekly-days { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; }
+.weekly-days > span { font-size: 10px; color: #6d7e70; align-self: center; margin-right: 4px; }
+.weekly-day-chip { border: 1px solid #e0e8de; background: #fff; color: #4d6a56; border-radius: 999px; padding: 5px 10px; font-size: 10px; font-weight: 700; cursor: pointer; }
+.weekly-day-chip.is-holiday { background: #f6e9d6; border-color: #e3c79a; color: #8a5a22; }
+.weekly-picker { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #6d7e70; margin-bottom: 12px; }
+.weekly-picker select { border: 1px solid #e0e8de; border-radius: 8px; padding: 7px 10px; font-size: 11px; color: #2d4e38; background: #fff; }
+.weekly-totals { margin-top: 16px; }
+.range-row { display: grid; grid-template-columns: 92px minmax(0, 1fr) minmax(130px, auto); gap: 12px; align-items: center; padding: 7px 0; border-bottom: 1px solid #f1f4ef; }
+.range-day strong { display: block; font-size: 11px; color: #2d4e38; }
+.range-day small { font-size: 9px; color: #98a198; }
+.range-track { position: relative; height: 12px; background: #eef2ed; border-radius: 999px; }
+.range-span { position: absolute; top: 0; bottom: 0; background: #cfe3d3; border-radius: 999px; }
+.range-mark { position: absolute; top: -2px; width: 4px; height: 16px; margin-left: -2px; background: #39764f; border-radius: 2px; }
+.range-value { font-size: 10px; color: #4d6a56; text-align: right; white-space: nowrap; }
+.range-value strong { color: #2d4e38; }
+@media (max-width: 640px) { .range-row { grid-template-columns: 70px minmax(0, 1fr); } .range-value { grid-column: 1 / -1; text-align: left; } }
