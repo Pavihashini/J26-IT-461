@@ -762,19 +762,62 @@ tbody tr:hover { background: #fbfcfa; }
 @media (prefers-reduced-motion: reduce) { .demand-theme > .panel:has(.model-form) tbody tr, .demand-theme > .panel:has(.model-form) .model-form .button-primary { transition: none; } }
 
 /* Weekly outlook with forecast range */
-.weekly-days { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; }
-.weekly-days > span { font-size: 10px; color: #6d7e70; align-self: center; margin-right: 4px; }
-.weekly-day-chip { border: 1px solid #e0e8de; background: #fff; color: #4d6a56; border-radius: 999px; padding: 5px 10px; font-size: 10px; font-weight: 700; cursor: pointer; }
-.weekly-day-chip.is-holiday { background: #f6e9d6; border-color: #e3c79a; color: #8a5a22; }
-.weekly-picker { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #6d7e70; margin-bottom: 12px; }
-.weekly-picker select { border: 1px solid #e0e8de; border-radius: 8px; padding: 7px 10px; font-size: 11px; color: #2d4e38; background: #fff; }
-.weekly-totals { margin-top: 16px; }
-.range-row { display: grid; grid-template-columns: 92px minmax(0, 1fr) minmax(130px, auto); gap: 12px; align-items: center; padding: 7px 0; border-bottom: 1px solid #f1f4ef; }
-.range-day strong { display: block; font-size: 11px; color: #2d4e38; }
-.range-day small { font-size: 9px; color: #98a198; }
-.range-track { position: relative; height: 12px; background: #eef2ed; border-radius: 999px; }
-.range-span { position: absolute; top: 0; bottom: 0; background: #cfe3d3; border-radius: 999px; }
-.range-mark { position: absolute; top: -2px; width: 4px; height: 16px; margin-left: -2px; background: #39764f; border-radius: 2px; }
-.range-value { font-size: 10px; color: #4d6a56; text-align: right; white-space: nowrap; }
-.range-value strong { color: #2d4e38; }
-@media (max-width: 640px) { .range-row { grid-template-columns: 70px minmax(0, 1fr); } .range-value { grid-column: 1 / -1; text-align: left; } }
+.weekly-days { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin: 0 0 16px; }
+.weekly-days > span { font-size: 11px; font-weight: 700; color: #7a6a4c; margin-right: 4px; }
+.weekly-day-chip { border: 1px solid #e6dcc3; background: #fff; color: #5b6e5f; border-radius: 999px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background .15s, border-color .15s, color .15s; }
+.weekly-day-chip:hover { border-color: #c9b98f; }
+.weekly-day-chip.is-holiday { background: #f6e3c8; border-color: #d9a867; color: #8a5420; }
+.weekly-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.weekly-picker { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 700; color: #7a6a4c; }
+.weekly-picker select { border: 1px solid #e0e8de; border-radius: 9px; padding: 8px 12px; font-size: 12px; font-weight: 600; color: #2d4e38; background: #fff; }
+.weekly-legend { display: flex; gap: 16px; font-size: 11px; color: #6d7e70; }
+.weekly-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend-dot { width: 11px; height: 11px; border-radius: 50%; background: #2f7048; border: 2px solid #fff; box-shadow: 0 0 0 1px #2f7048; }
+.legend-band { width: 22px; height: 9px; border-radius: 999px; background: #bfdcc6; }
+
+.weekly-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
+.weekly-tile { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: #fff; border: 1px solid #ebe3cf; border-radius: 12px; }
+.weekly-tile-icon { display: grid; place-items: center; width: 32px; height: 32px; flex: none; border-radius: 9px; color: #2f7048; background: #e4f1e7; }
+.weekly-tile-icon.warm { color: #a8601f; background: #f8e8d3; }
+.weekly-tile-icon.blue { color: #3b73a0; background: #e3eef7; }
+.weekly-tile small { display: block; font-size: 10px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: #9a8b6a; }
+.weekly-tile strong { display: block; margin-top: 3px; font-size: 16px; color: #23402f; }
+.weekly-tile strong em { font-style: normal; font-size: 11px; font-weight: 600; color: #7a8a7e; }
+.weekly-tile p { margin: 3px 0 0; font-size: 11px; color: #7a8a7e; }
+
+.range-chart { padding: 4px 0 2px; }
+.range-row { display: grid; grid-template-columns: 138px minmax(0, 1fr) 128px; gap: 18px; align-items: center; padding: 11px 12px; border-radius: 10px; }
+.range-row + .range-row { margin-top: 2px; }
+.range-row.is-weekend { background: #faf6ea; }
+.range-row.is-holiday { background: #fbefdc; }
+.range-row.is-peak { box-shadow: inset 3px 0 0 #b8743a; }
+.range-day strong { display: block; font-size: 13px; color: #23402f; }
+.range-day small { display: flex; align-items: center; gap: 6px; margin-top: 2px; font-size: 11px; color: #8b9a8e; }
+.peak-tag { font-size: 9px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; color: #8a5420; background: #f6dfbf; padding: 2px 6px; border-radius: 999px; }
+.range-track { position: relative; height: 16px; background: #eef1e8; border-radius: 999px; }
+.range-grid { position: absolute; top: -4px; bottom: -4px; width: 1px; background: #dfe5d8; }
+.range-span { position: absolute; top: 0; bottom: 0; background: linear-gradient(90deg, #cfe5d4, #a9d0b4); border-radius: 999px; }
+.range-mark { position: absolute; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; background: #2f7048; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 1px 4px rgba(35, 64, 47, .4); }
+.range-value { text-align: right; }
+.range-value strong { display: block; font-size: 14px; color: #23402f; }
+.range-value strong em { font-style: normal; font-size: 11px; font-weight: 600; color: #7a8a7e; }
+.range-value span { display: block; margin-top: 2px; font-size: 11px; color: #8b9a8e; }
+.range-axis { padding-top: 2px; padding-bottom: 0; }
+.range-axis-scale { position: relative; height: 16px; }
+.range-axis-scale span { position: absolute; transform: translateX(-50%); font-size: 10px; color: #9aa79d; }
+.range-axis-scale span:first-child { transform: none; }
+.range-axis-scale span:last-child { transform: translateX(-100%); }
+.range-axis-unit { text-align: right; font-size: 10px; color: #9aa79d; }
+
+.weekly-table-title { margin: 22px 0 8px; font-size: 12px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: #8a5a2b; }
+.weekly-totals td, .weekly-totals th { font-size: 12px; }
+.weekly-totals tr.is-active td { background: #f4f8f0; }
+.weekly-link { border: 0; background: none; padding: 0; font: inherit; font-weight: 700; color: #23402f; cursor: pointer; text-align: left; }
+.weekly-link:hover { color: #2f7048; text-decoration: underline; }
+
+@media (max-width: 900px) {
+  .weekly-summary { grid-template-columns: 1fr; }
+  .range-row { grid-template-columns: 108px minmax(0, 1fr); gap: 10px 14px; }
+  .range-value { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 10px; text-align: left; }
+  .range-axis-unit { display: none; }
+}
