@@ -127,12 +127,3 @@ export function fetchConsumptionForecast(payload) {
     body: JSON.stringify(payload),
   });
 }
-
-
-export function fetchWeeklyForecast(payload) {
-  return requestJson('/api/forecast/weekly', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-}

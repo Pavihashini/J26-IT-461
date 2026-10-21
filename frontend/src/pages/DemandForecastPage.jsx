@@ -3,7 +3,6 @@ import { CalendarDays, ChefHat, CloudSun, Gauge, Leaf, Plus, Minus, ShoppingBask
 import { initialDishes, ingredientCatalog, todayISO } from '../data/mockData.js';
 import { formatDate } from '../utils.js';
 import IngredientForecastPanel from '../components/IngredientForecastPanel.jsx';
-import WeeklyOutlookPanel from '../components/WeeklyOutlookPanel.jsx';
 import { FlowStrip, Notice, PageHeading, Panel, StatCard, StatusBadge } from '../components/Shared.jsx';
 
 const ingredientById = Object.fromEntries(ingredientCatalog.map((item) => [item.id, item]));
@@ -106,8 +105,6 @@ export default function DemandForecastPage({ selectedDate, setSelectedDate, prep
           </div>
         </Panel>
       </div>
-
-      <WeeklyOutlookPanel selectedDate={selectedDate} />
 
       <Panel title="Kitchen preparation recommendations" subtitle="Adjust portion counts to see the shared ingredient requirement totals update below.">
         <div className="table-wrap">

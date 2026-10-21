@@ -8,7 +8,6 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-import numpy as np
 import pandas as pd
 
 MODEL_PATH = (
@@ -128,11 +127,3 @@ def build_features(
 def predict_consumption(features: pd.DataFrame) -> list[float]:
     predictions = get_model().predict(features)
     return [max(0.0, float(value)) for value in predictions]
-
-
-def tree_predictions(features: pd.DataFrame) -> np.ndarray:
-    """Each tree of the forest's own prediction, shape (n_trees, n_rows); their spread is the forecast range."""
-    pipeline = get_model()
-    transformed = pipeline.named_steps["preprocessor"].transform(features)
-    trees = pipeline.named_steps["regressor"].estimators_
-    return np.maximum(0.0, np.stack([tree.predict(transformed) for tree in trees]))
