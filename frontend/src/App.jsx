@@ -11,7 +11,7 @@ import { fetchCurrentUser, fetchHealth, getStoredToken, setSessionToken } from '
 const navigation = [
   { id: 'forecast', label: 'Demand forecasting', detail: 'Prepare the right quantity', icon: ChefHat, number: '01', roles: ['admin'] },
   { id: 'inventory', label: 'Inventory & waste risk', detail: 'Protect stock value', icon: ShieldAlert, number: '02', roles: ['admin'] },
-  { id: 'surplus', label: 'Surplus bidding', detail: 'Recover value from surplus', icon: ShoppingBag, number: '03', roles: ['user'] },
+  { id: 'surplus', label: 'Time limited surplus food bidding and recovery', detail: 'Recover value from surplus', icon: ShoppingBag, number: '03', roles: ['user'] },
 ];
 
 function Dashboard({ user, onLogout }) {

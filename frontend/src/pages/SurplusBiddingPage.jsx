@@ -96,7 +96,7 @@ export default function SurplusBiddingPage({ isActive = true }) {
   return <div className="page-stack">
     <PageHeading
       eyebrow="Component 03 · Recover value from unavoidable surplus"
-      title="Surplus pricing & bidding"
+      title="Time limited surplus food bidding and recovery"
       description="Simulate an automatically-created surplus listing, accept valid bids for a limited time, and award the item to the highest valid bid when the window closes."
       actions={<span className="live-demo-label"><span className="pulse-dot" /> Local demo timer</span>}
     />
