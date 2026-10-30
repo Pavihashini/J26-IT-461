@@ -81,36 +81,3 @@ class StockPlanResponse(BaseModel):
     forecast_date: date
     purchases: list[PurchaseItem]
     dishes: list[DishAvailability]
-
-
-class WeeklyForecastRequest(BaseModel):
-    restaurant_name: str
-    start_date: date
-    days: int = Field(default=7, ge=1, le=14)
-    estimated_customers: int = Field(default=200, ge=0, le=100000)
-    weather: str = "Sunny"
-    holidays: list[date] = Field(default_factory=list, description="Dates in the window that are a holiday or festival.")
-    ingredients: list[str] | None = Field(default=None, description="All trained ingredients when omitted.")
-
-
-class RangeForecast(BaseModel):
-    ingredient: str
-    unit: str
-    predicted_qty: float
-    low_qty: float = Field(description="10th percentile of the forest's tree predictions.")
-    high_qty: float = Field(description="90th percentile of the forest's tree predictions.")
-
-
-class DayForecast(BaseModel):
-    date: date
-    day_of_week: str
-    is_holiday: bool
-    forecasts: list[RangeForecast]
-
-
-class WeeklyForecastResponse(BaseModel):
-    restaurant_name: str
-    district: str
-    start_date: date
-    days: list[DayForecast]
-    totals: list[RangeForecast]
