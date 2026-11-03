@@ -49,7 +49,7 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)) -> TokenRe
         db.rollback()
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="An account with this email or mobile number already exists.") from None
 
-    return TokenResponse(access_token=create_access_token(user.id, user.role), user=UserOut.model_validate(user))
+    return TokenResponse(access_token=create_access_token(user.id, user.role, user.password_hash), user=UserOut.model_validate(user))
 
 
 @router.post("/login", response_model=TokenResponse)
@@ -70,7 +70,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse
     if user is None or not password_ok:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect email, mobile number or password.")
 
-    return TokenResponse(access_token=create_access_token(user.id, user.role), user=UserOut.model_validate(user))
+    return TokenResponse(access_token=create_access_token(user.id, user.role, user.password_hash), user=UserOut.model_validate(user))
 
 
 @router.get("/me", response_model=UserOut)

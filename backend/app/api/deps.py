@@ -1,9 +1,10 @@
 import jwt
+import hmac
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
-from app.core.security import decode_access_token
+from app.core.security import decode_access_token, password_tag
 from app.db.session import get_db
 from app.models.user import ROLE_ADMIN, User
 
@@ -22,7 +23,7 @@ def get_current_user(
         user = db.get(User, int(payload["sub"]))
     except (jwt.PyJWTError, KeyError, ValueError):
         raise unauthorized from None
-    if user is None:
+    if user is None or not hmac.compare_digest(str(payload.get("pwd", "")), password_tag(user.password_hash)):
         raise unauthorized
     return user
 

@@ -28,19 +28,24 @@ export async function fetchHealth() {
 }
 
 const TOKEN_KEY = 'rr_access_token';
+let rememberSession = false;
 
 export function getStoredToken() {
   try {
-    return window.localStorage.getItem(TOKEN_KEY);
+    const persistent = window.localStorage.getItem(TOKEN_KEY);
+    rememberSession = Boolean(persistent);
+    return persistent || window.sessionStorage.getItem(TOKEN_KEY);
   } catch {
     return null;
   }
 }
 
-export function storeToken(token) {
+export function storeToken(token, remember = rememberSession) {
   try {
-    if (token) window.localStorage.setItem(TOKEN_KEY, token);
-    else window.localStorage.removeItem(TOKEN_KEY);
+    window.localStorage.removeItem(TOKEN_KEY);
+    window.sessionStorage.removeItem(TOKEN_KEY);
+    rememberSession = Boolean(token && remember);
+    if (token) (rememberSession ? window.localStorage : window.sessionStorage).setItem(TOKEN_KEY, token);
   } catch {
     // storage may be blocked; the session then lasts until reload
   }
@@ -95,9 +100,9 @@ export function fetchStockPlan(payload) {
   });
 }
 
-export function setSessionToken(token) {
+export function setSessionToken(token, remember = rememberSession) {
   memoryToken = token;
-  storeToken(token);
+  storeToken(token, remember);
 }
 
 export function loginUser(email, password) {
@@ -119,3 +124,8 @@ export function registerUser(fullName, email, password, profile = {}) {
 export function fetchCurrentUser() {
   return requestJson('/api/auth/me');
 }
+
+export const fetchAuthCapabilities = () => requestJson('/api/auth/capabilities');
+export const signInWithGoogle = (credential) => requestJson('/api/auth/google', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ credential }) });
+export const requestPasswordReset = (email) => requestJson('/api/auth/forgot-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+export const resetPassword = (token, password) => requestJson('/api/auth/reset-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token, password }) });

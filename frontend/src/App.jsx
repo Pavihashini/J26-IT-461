@@ -5,6 +5,8 @@ import DemandForecastPage from './pages/DemandForecastPage.jsx';
 import InventoryRiskPage from './pages/InventoryRiskPage.jsx';
 import SurplusBiddingPage from './pages/SurplusBiddingPage.jsx';
 import AuthPage from './pages/AuthPage.jsx';
+import GuestPage from './pages/GuestPage.jsx';
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import WelcomeBanner from './components/WelcomeBanner.jsx';
 import { initialDishes, initialWasteRecords, isoDaysFromNow } from './data/mockData.js';
@@ -96,7 +98,7 @@ const initials = (name) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((pa
 export default function App() {
   const [session, setSession] = useState({ status: getStoredToken() ? 'checking' : 'signed-out', user: null });
   const [notice, setNotice] = useState('');
-  const [view, setView] = useState('home');
+  const [view, setView] = useState(() => new URLSearchParams(window.location.search).has('reset_token') ? 'reset-password' : 'home');
   const navigate = (next) => {
     setNotice('');
     setView(next);
@@ -134,14 +136,17 @@ export default function App() {
     return () => window.removeEventListener('auth:expired', handleExpired);
   }, []);
 
+  if (view === 'reset-password') return <ResetPasswordPage onComplete={() => { setSessionToken(null); setSession({ status: 'signed-out', user: null }); navigate('user-login'); }} />;
+
   if (session.status === 'checking') {
     return <div className="auth-shell"><div className="model-loading"><Loader2 size={18} className="spin" /> Loading…</div></div>;
   }
 
   if (session.status === 'signed-out') {
     if (view === 'home') return <HomePage onNavigate={navigate} />;
-    return <AuthPage key={view} initialMode={view === 'user-register' ? 'register' : 'login'} variant={view === 'admin-login' ? 'admin' : 'user'} notice={notice} onNavigate={navigate} onAuthenticated={({ access_token: token, user }) => {
-      setSessionToken(token);
+    if (view === 'guest') return <GuestPage onNavigate={navigate} />;
+    return <AuthPage key={view} initialMode={view === 'user-register' ? 'register' : 'login'} variant={view === 'admin-login' ? 'admin' : 'user'} notice={notice} onNavigate={navigate} onAuthenticated={({ access_token: token, user, remember_me = false }) => {
+      setSessionToken(token, remember_me);
       setNotice('');
       setView('home');
       setSession({ status: 'signed-in', user });

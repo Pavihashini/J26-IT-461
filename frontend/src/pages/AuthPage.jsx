@@ -1,8 +1,10 @@
 import BrandMark from '../components/BrandMark.jsx';
 import RegistrationForm from '../components/RegistrationForm.jsx';
-import React, { useState } from 'react';
-import { ArrowLeft, Coins, Eye, EyeOff, Gavel, Leaf, Loader2, Lock, Mail, ShieldCheck, ShoppingBag } from 'lucide-react';
-import { loginUser } from '../services/api.js';
+import React, { useEffect, useState } from 'react';
+import { ArrowLeft, Coins, Eye, EyeOff, Gavel, Leaf, Loader2, Lock, Mail, ShieldCheck, ShoppingBag, UserRound } from 'lucide-react';
+import { fetchAuthCapabilities, loginUser } from '../services/api.js';
+import GoogleSignIn from '../components/GoogleSignIn.jsx';
+import { ForgotPassword } from './ResetPasswordPage.jsx';
 import './AuthPage.css';
 
 const VARIANTS = {
@@ -35,6 +37,16 @@ export default function AuthPage({ variant = 'user', initialMode = 'login', onAu
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [remember, setRemember] = useState(false);
+  const [forgot, setForgot] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [capabilities, setCapabilities] = useState({});
+
+  useEffect(() => {
+    let active = true;
+    fetchAuthCapabilities().then(data => { if (active) setCapabilities(data); }).catch(() => {});
+    return () => { active = false; };
+  }, []);
 
   const isRegister = !isAdmin && mode === 'register';
   const BadgeIcon = copy.icon;
@@ -42,12 +54,22 @@ export default function AuthPage({ variant = 'user', initialMode = 'login', onAu
   const switchMode = (next) => {
     setMode(next);
     setError('');
+    setFieldErrors({});
+    setForgot(false);
   };
 
   const submit = async (event) => {
     event.preventDefault();
+    if (loading) return;
     setError('');
-
+    const errors = {};
+    const identity = email.trim();
+    const validEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(identity);
+    const validMobile = /^(?:\+94|94|0)?7\d{8}$/.test(identity.replace(/[\s()-]/g, ''));
+    if (!identity || !(validEmail || (!isAdmin && validMobile))) errors.username = isAdmin ? 'Enter a valid email address.' : 'Enter a valid email or Sri Lankan mobile number.';
+    if (!password) errors.password = 'Password is required.';
+    setFieldErrors(errors);
+    if (Object.keys(errors).length) { document.getElementById(`signin-${Object.keys(errors)[0]}`)?.focus(); return; }
     setLoading(true);
     try {
       const session = await loginUser(email.trim(), password);
@@ -57,7 +79,7 @@ export default function AuthPage({ variant = 'user', initialMode = 'login', onAu
           : 'This is an admin account. Please use the admin login.');
         return;
       }
-      onAuthenticated(session);
+      onAuthenticated({ ...session, remember_me: remember });
     } catch (reason) {
       setError(reason.message);
     } finally {
@@ -93,31 +115,29 @@ export default function AuthPage({ variant = 'user', initialMode = 'login', onAu
     <main className="auth-main">
       <button type="button" className="auth-back" onClick={() => onNavigate('home')}><ArrowLeft size={15} /> Back to home</button>
 
-      <form className="auth-card" onSubmit={submit} noValidate>
-        <div className="auth-icon"><BadgeIcon size={22} /></div>
-        <h1>{isRegister ? 'Create your account' : isAdmin ? 'Admin sign in' : 'Welcome back'}</h1>
+      {forgot ? <ForgotPassword available={Boolean(capabilities.password_reset_enabled)} onBack={() => setForgot(false)} /> : <form className={`auth-card ${isAdmin ? '' : 'signin-reference'}`} onSubmit={submit} noValidate>
+        {isAdmin && <div className="auth-icon"><BadgeIcon size={22} /></div>}
+        <h1>{isAdmin ? 'Admin sign in' : 'Sign in or register'}</h1>
         {copy.lead && <p className="auth-lead">{copy.lead}</p>}
-
         {notice && !error && <div className="auth-message info" role="status">{notice}</div>}
         {error && <div className="auth-message error" role="alert">{error}</div>}
 
-        <label><span>{isAdmin ? 'Email' : 'Email or mobile number'}</span><div className="field"><Mail size={16} /><input type={isAdmin ? 'email' : 'text'} autoComplete="username" placeholder={isAdmin ? 'admin@restaurant.com' : 'Email or 0771234567'} value={email} onChange={(event) => setEmail(event.target.value)} required /></div></label>
-        <label><span>Password</span><div className="field"><Lock size={16} /><input type={showPassword ? 'text' : 'password'} autoComplete={isRegister ? 'new-password' : 'current-password'} placeholder="••••••••" value={password} onChange={(event) => setPassword(event.target.value)} required />
-          <button type="button" className="field-toggle" onClick={() => setShowPassword((shown) => !shown)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}</button></div></label>
+        <label htmlFor="signin-username"><span>{isAdmin ? 'Email' : 'Username'} <span aria-hidden="true">*</span></span><div className="field">{isAdmin && <Mail size={16} />}<input id="signin-username" type={isAdmin ? 'email' : 'text'} autoComplete="username" placeholder={isAdmin ? 'admin@restaurant.com' : 'Mobile (Ex: 771234567) / Email'} value={email} onChange={event => { setEmail(event.target.value); setFieldErrors(previous => ({ ...previous, username: '' })); }} required aria-invalid={Boolean(fieldErrors.username)} aria-describedby={fieldErrors.username ? 'signin-username-error' : undefined} /></div></label>
+        {fieldErrors.username && <small id="signin-username-error" className="signin-field-error">{fieldErrors.username}</small>}
+        <label htmlFor="signin-password"><span>Password <span aria-hidden="true">*</span></span><div className="field">{isAdmin && <Lock size={16} />}<input id="signin-password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" placeholder="Password" value={password} onChange={event => { setPassword(event.target.value); setFieldErrors(previous => ({ ...previous, password: '' })); }} required aria-invalid={Boolean(fieldErrors.password)} aria-describedby={fieldErrors.password ? 'signin-password-error' : undefined} />
+          <button type="button" className="field-toggle" onClick={() => setShowPassword(shown => !shown)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff size={17} /> : <Eye size={17} />}</button></div></label>
+        {fieldErrors.password && <small id="signin-password-error" className="signin-field-error">{fieldErrors.password}</small>}
+        <label className="signin-remember"><input type="checkbox" checked={remember} onChange={event => setRemember(event.target.checked)} /><span>Remember me</span></label>
+        <button type="submit" className="button-primary auth-submit" disabled={loading}>{loading ? <><Loader2 size={16} className="spin" /> Signing in?</> : <><UserRound size={19} />{isAdmin ? 'Sign in to dashboard' : 'Sign in with SmartPlate'}</>}</button>
+        <button className="signin-text-button signin-forgot" type="button" onClick={() => setForgot(true)}>Forgot your password?</button>
+        {!isAdmin && <>
+          <div className="signin-access-actions"><button className="signin-guest" type="button" onClick={() => onNavigate('guest')}>Continue as guest</button><button className="signin-register" type="button" onClick={() => switchMode('register')}>Create an account</button></div>
+          <div className="signin-google-divider"><span>or</span></div>
+          <GoogleSignIn clientId={capabilities.google_client_id} onAuthenticated={onAuthenticated} onError={setError} remember={remember} />
+        </>}
+        <p className="auth-switch other">{isAdmin ? 'Not a restaurant admin?' : 'Run a restaurant?'}{' '}<button type="button" onClick={() => onNavigate(isAdmin ? 'user-login' : 'admin-login')}>{isAdmin ? 'Customer login' : 'Admin login'}</button></p>
+      </form>}
 
-        <button type="submit" className="button-primary auth-submit" disabled={loading}>
-          {loading ? <><Loader2 size={15} className="spin" /> Please wait…</> : isRegister ? 'Create account' : isAdmin ? 'Sign in to dashboard' : 'Log in'}
-        </button>
-
-        {!isAdmin && <p className="auth-switch">
-          {isRegister ? 'Already have an account?' : 'New here?'}{' '}
-          <button type="button" onClick={() => switchMode(isRegister ? 'login' : 'register')}>{isRegister ? 'Log in' : 'Create an account'}</button>
-        </p>}
-        <p className="auth-switch other">
-          {isAdmin ? 'Not a restaurant admin?' : 'Run a restaurant?'}{' '}
-          <button type="button" onClick={() => onNavigate(isAdmin ? 'user-login' : 'admin-login')}>{isAdmin ? 'Customer login' : 'Admin login'}</button>
-        </p>
-      </form>
     </main>
   </div>;
 }

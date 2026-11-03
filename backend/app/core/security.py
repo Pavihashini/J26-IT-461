@@ -45,11 +45,31 @@ def verify_password(password: str, stored: str) -> bool:
     return hmac.compare_digest(actual, expected)
 
 
-def create_access_token(user_id: int, role: str) -> str:
-    payload = {"sub": str(user_id), "role": role, "exp": datetime.now(timezone.utc) + TOKEN_LIFETIME}
+def password_tag(password_hash: str) -> str:
+    return hmac.new(_secret().encode(), password_hash.encode(), hashlib.sha256).hexdigest()
+
+
+def create_access_token(user_id: int, role: str, password_hash: str) -> str:
+    payload = {"sub": str(user_id), "role": role, "purpose": "access", "pwd": password_tag(password_hash), "exp": datetime.now(timezone.utc) + TOKEN_LIFETIME}
     return jwt.encode(payload, _secret(), algorithm="HS256")
 
 
 def decode_access_token(token: str) -> dict:
     """Return the token payload, or raise jwt.PyJWTError when invalid or expired."""
-    return jwt.decode(token, _secret(), algorithms=["HS256"])
+    payload = jwt.decode(token, _secret(), algorithms=["HS256"])
+    if payload.get("purpose") != "access":
+        raise jwt.InvalidTokenError("Not an access token.")
+    return payload
+
+
+def create_reset_token(user_id: int, password_hash: str) -> str:
+    import secrets
+
+    return jwt.encode({"sub": str(user_id), "purpose": "reset", "pwd": password_tag(password_hash), "nonce": secrets.token_urlsafe(16), "exp": datetime.now(timezone.utc) + timedelta(minutes=15)}, _secret(), algorithm="HS256")
+
+
+def decode_reset_token(token: str) -> dict:
+    payload = jwt.decode(token, _secret(), algorithms=["HS256"])
+    if payload.get("purpose") != "reset":
+        raise jwt.InvalidTokenError("Not a password reset token.")
+    return payload

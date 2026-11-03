@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes.auth import router as auth_router
+from app.api.routes.account_access import router as account_access_router
 from app.api.routes.forecast import router as forecast_router
 
 
@@ -51,6 +52,7 @@ app.add_middleware(
 
 
 app.include_router(auth_router)
+app.include_router(account_access_router)
 app.include_router(forecast_router)
 
 

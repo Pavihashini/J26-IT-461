@@ -34,3 +34,10 @@ class UserProfile(Base):
     phone_number: Mapped[str] = mapped_column(String(16), unique=True, index=True)
     use_email_username: Mapped[bool] = mapped_column(Boolean, default=True)
     use_mobile_username: Mapped[bool] = mapped_column(Boolean, default=False)
+
+
+class GoogleIdentity(Base):
+    __tablename__ = "google_identities"
+
+    subject: Mapped[str] = mapped_column(String(255), primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), unique=True)
