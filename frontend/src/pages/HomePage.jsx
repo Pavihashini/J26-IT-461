@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import BrandMark from '../components/BrandMark.jsx';
-import { ArrowRight, Check, ChefHat, ChevronRight, Home, Leaf, Menu, ShieldAlert, ShieldCheck, ShoppingBag, UserRound, X } from 'lucide-react';
+import { ArrowRight, BarChart3, Check, ChefHat, ChevronRight, Clock3, Home, Leaf, Menu, ShieldAlert, ShieldCheck, ShoppingBag, UserRound, X } from 'lucide-react';
 import './HomePage.css';
 
 const FEATURES = [
@@ -10,9 +10,9 @@ const FEATURES = [
 ];
 
 const STATS = [
-  { value: 'Daily', label: 'demand forecasts' },
-  { value: 'Early', label: 'expiry alerts' },
-  { value: 'Smart', label: 'surplus recovery' },
+  { value: 'Daily', label: 'demand forecasts', icon: BarChart3 },
+  { value: 'Early', label: 'expiry alerts', icon: Clock3 },
+  { value: 'Smart', label: 'surplus recovery', icon: Leaf },
 ];
 
 export default function HomePage({ onNavigate }) {
@@ -64,13 +64,13 @@ export default function HomePage({ onNavigate }) {
     <section className="home-hero home-hero-burger">
       <div className="hero-copy">
         <span className="hero-pill"><span className="sp-pill-dot" /> A smarter way to serve</span>
-        <h1>Better planning.<br /><em>Less waste.</em><br />More possibility.</h1>
+        <h1><span>Better planning.</span><em>Less waste.</em><span>More possibility.</span></h1>
         <div className="hero-actions">
           <button type="button" className="home-cta" onClick={() => onNavigate('admin-login')}>Open your dashboard <ArrowRight size={17} /></button>
           <button type="button" className="home-cta ghost" onClick={() => onNavigate('user-login')}>Find surplus food <ChevronRight size={17} /></button>
         </div>
         <div className="sp-hero-note"><Check size={15} /> Thoughtful tools, from kitchen to community.</div>
-        <div className="hero-stats">{STATS.map((stat) => <div key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></div>)}</div>
+        <div className="hero-stats">{STATS.map(({ value, label, icon: Icon }) => <div key={label} className="sp-hero-highlight"><Icon size={19} strokeWidth={1.7} /><strong>{value}</strong><span>{label}</span></div>)}</div>
       </div>
       <div className="sp-hero-photo"><img src="/images/smartplate-burger.jpg" alt="" aria-hidden="true" width="1920" height="1080" fetchPriority="high" decoding="async" /></div>
     </section>

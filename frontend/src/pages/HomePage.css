@@ -258,3 +258,51 @@
  .smartplate-home .sp-site-header .sp-register { grid-column: 2; grid-row: 2; width: 100%; }
  .sp-site-header .sp-menu-toggle { grid-column: 2; grid-row: 1; justify-self: end; }
 }
+
+/* Refined hierarchy and highlights for the burger hero. */
+.smartplate-home .home-hero.home-hero-burger { padding-block: clamp(65px, 8vh, 100px); }
+.home-hero-burger .hero-copy { max-width: 660px; }
+.home-hero-burger::after { background: linear-gradient(90deg, rgba(9,25,17,.96) 0%, rgba(11,29,20,.86) 29%, rgba(10,25,17,.38) 65%, rgba(10,25,17,.1) 100%); }
+.smartplate-home .home-hero-burger .hero-pill { gap: 9px; border-color: #d4e2c62b; background: #f4f7eb0a; padding: 8px 14px; color: #d6e2c9; font-size: 11px; font-weight: 500; letter-spacing: .6px; }
+.home-hero-burger .sp-pill-dot { width: 5px; height: 5px; box-shadow: 0 0 0 4px #c1d8a510; }
+.smartplate-home .home-hero-burger h1 { margin: 27px 0 32px; font-size: clamp(41px, 4.2vw, 64px); line-height: 1.1; letter-spacing: -2.1px; font-weight: 650; }
+.home-hero-burger h1 > span, .home-hero-burger h1 > em { display: block; }
+.smartplate-home .home-hero-burger h1 em { font-family: Georgia, 'Times New Roman', serif; font-size: 1.19em; line-height: 1.18; font-weight: 400; font-style: italic; letter-spacing: -2.5px; color: #c4d99f; padding: 0 0 5px; }
+.home-hero-burger h1 > span:last-child { color: #e9eddf; }
+.smartplate-home .home-hero-burger .hero-actions { gap: 12px; flex-direction: row; align-items: stretch; }
+.smartplate-home .home-hero-burger .hero-actions .home-cta { min-height: 52px; padding: 14px 21px; border: 1px solid #c5d9a8; border-radius: 10px; color: #213e28; background: linear-gradient(135deg, #d1e1b9, #b4ce95); font-size: 14px; font-weight: 650; box-shadow: 0 5px 18px #050e0815; gap: 15px; }
+.smartplate-home .home-hero-burger .hero-actions .home-cta:hover { background: #d6e5bf; transform: translateY(-2px); }
+.smartplate-home .home-hero-burger .hero-actions .home-cta.ghost { background: #ffffff06; border-color: #e0ead245; color: #f0f4e6; box-shadow: none; backdrop-filter: blur(8px); }
+.smartplate-home .home-hero-burger .hero-actions .home-cta.ghost:hover { background: #ffffff12; border-color: #e0ead275; }
+.home-hero-burger .sp-hero-note { margin-top: 19px; font-size: 11px; line-height: 1.6; color: #c0d0b6; gap: 8px; }
+.home-hero-burger .sp-hero-note svg { color: #b6ce92; }
+.smartplate-home .home-hero-burger .hero-stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); max-width: 510px; margin-top: 31px; padding: 19px 0; border: 1px solid #e2ead322; border-radius: 12px; background: #f2f6e705; backdrop-filter: blur(12px); }
+.smartplate-home .home-hero-burger .hero-stats > div { min-width: 0; margin: 0; padding: 0 21px; border-color: #dae5cc26; }
+.sp-hero-highlight > svg { display: block; color: #c3d49f; margin-bottom: 10px; }
+.smartplate-home .home-hero-burger .hero-stats strong { color: #e5edda; font-size: 16px; font-weight: 600; margin-bottom: 4px; letter-spacing: -.2px; }
+.smartplate-home .home-hero-burger .hero-stats span { display: block; font-size: 11px; line-height: 1.6; color: #bfd0b4; }
+@media (max-width: 1100px) {
+ .smartplate-home .home-hero-burger h1 { font-size: 50px; }
+}
+@media (max-width: 900px) {
+ .home-hero-burger::after { background: linear-gradient(90deg, #091911f0, #09191199 75%, #09191170); }
+ .home-hero-burger .hero-copy { max-width: 600px; }
+}
+@media (max-width: 620px) {
+ .smartplate-home .home-hero.home-hero-burger { min-height: calc(100svh - 128px); padding: 49px 22px; }
+ .smartplate-home .home-hero-burger h1 { font-size: clamp(34px, 8vw, 46px); letter-spacing: -1.2px; margin: 24px 0 28px; }
+ .smartplate-home .home-hero-burger h1 em { letter-spacing: -1.5px; }
+ .smartplate-home .home-hero-burger .hero-actions { flex-direction: column; gap: 10px; max-width: 390px; }
+ .smartplate-home .home-hero-burger .hero-actions .home-cta { justify-content: space-between; font-size: 13px; }
+ .home-hero-burger .sp-hero-note { font-size: 10px; }
+ .smartplate-home .home-hero-burger .hero-stats { margin-top: 25px; padding: 16px 0; }
+ .smartplate-home .home-hero-burger .hero-stats > div { padding: 0 14px; }
+ .smartplate-home .home-hero-burger .hero-stats strong { font-size: 15px; }
+ .smartplate-home .home-hero-burger .hero-stats span { font-size: 10px; }
+ .sp-hero-highlight > svg { width: 17px; height: 17px; margin-bottom: 8px; }
+}
+@media (max-width: 360px) {
+ .smartplate-home .home-hero.home-hero-burger { padding-inline: 18px; }
+ .smartplate-home .home-hero-burger h1 { font-size: 33px; }
+ .smartplate-home .home-hero-burger .hero-stats > div { padding: 0 11px; }
+}
