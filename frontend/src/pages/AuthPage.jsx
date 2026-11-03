@@ -24,10 +24,10 @@ const VARIANTS = {
   },
 };
 
-export default function AuthPage({ variant = 'user', onAuthenticated, onNavigate, notice = '' }) {
+export default function AuthPage({ variant = 'user', initialMode = 'login', onAuthenticated, onNavigate, notice = '' }) {
   const copy = VARIANTS[variant];
   const isAdmin = variant === 'admin';
-  const [mode, setMode] = useState('login');
+  const [mode, setMode] = useState(initialMode);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

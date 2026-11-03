@@ -140,7 +140,7 @@ export default function App() {
 
   if (session.status === 'signed-out') {
     if (view === 'home') return <HomePage onNavigate={navigate} />;
-    return <AuthPage key={view} variant={view === 'admin-login' ? 'admin' : 'user'} notice={notice} onNavigate={navigate} onAuthenticated={({ access_token: token, user }) => {
+    return <AuthPage key={view} initialMode={view === 'user-register' ? 'register' : 'login'} variant={view === 'admin-login' ? 'admin' : 'user'} notice={notice} onNavigate={navigate} onAuthenticated={({ access_token: token, user }) => {
       setSessionToken(token);
       setNotice('');
       setView('home');

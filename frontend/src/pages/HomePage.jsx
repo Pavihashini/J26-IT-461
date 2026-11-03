@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import BrandMark from '../components/BrandMark.jsx';
-import { ArrowRight, ArrowUpRight, Check, ChefHat, ChevronRight, Leaf, Menu, ShieldAlert, ShieldCheck, ShoppingBag, X } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, ChefHat, ChevronRight, Home, Leaf, Menu, ShieldAlert, ShieldCheck, ShoppingBag, UserRound, X } from 'lucide-react';
 import './HomePage.css';
 
 const FEATURES = [
@@ -112,23 +112,40 @@ export default function HomePage({ onNavigate }) {
 
     <footer className="home-footer sp-site-footer">
       <div className="sp-footer-inner">
-        <div className="sp-footer-top">
-          <div className="sp-footer-brand">
-            <a href="#top" className="home-logo" aria-label="SmartPlate home"><BrandMark /><span><strong>SmartPlate<span className="sp-brand-dot">.</span></strong><small>Restaurant intelligence</small></span></a>
-            <p>A little planning.<br />A lot less waste.</p>
-            <span className="sp-purpose"><Leaf size={15} /> Better kitchens. Thoughtful choices.</span>
-          </div>
-          <nav className="sp-footer-links" aria-label="Explore SmartPlate">
-            <h2>Explore</h2>
-            <a href="#features">Our features <ArrowUpRight size={14} /></a>
-            <a href="#how">How it works <ArrowUpRight size={14} /></a>
-            <button type="button" onClick={() => navigate('user-login')}>Surplus marketplace <ArrowUpRight size={14} /></button>
+        <div className="sp-footer-heading">
+          <a href="#top" className="sp-footer-logo" aria-label="SmartPlate home"><BrandMark /><strong>SmartPlate</strong></a>
+          <div className="sp-footer-divider" aria-hidden="true" />
+          <nav className="sp-footer-shortcuts" aria-label="Quick links">
+            <a href="#top" aria-label="Back to home" title="Home"><Home size={19} /></a>
+            <a href="#features" aria-label="Explore features" title="Features"><Leaf size={19} /></a>
+            <a href="#how" aria-label="See how it works" title="How it works"><ChefHat size={20} /></a>
+            <button type="button" onClick={() => navigate('admin-login')} aria-label="Restaurant portal" title="Restaurant portal"><ShieldCheck size={19} /></button>
+            <button type="button" onClick={() => navigate('user-login')} aria-label="Customer portal" title="Customer portal"><UserRound size={19} /></button>
           </nav>
-          <nav className="sp-footer-links" aria-label="SmartPlate portals">
-            <h2>Your workspace</h2>
-            <button type="button" onClick={() => navigate('admin-login')}>Restaurant dashboard <ArrowUpRight size={14} /></button>
-            <button type="button" onClick={() => navigate('user-login')}>Customer login <ArrowUpRight size={14} /></button>
-            <a href="#top">Back to top <ArrowUpRight size={14} /></a>
+        </div>
+        <div className="sp-footer-columns">
+          <nav className="sp-footer-links" aria-label="About SmartPlate">
+            <h2>About</h2>
+            <a href="#features">About SmartPlate</a>
+            <a href="#features">Our features</a>
+            <a href="#how">How it works</a>
+          </nav>
+          <nav className="sp-footer-links" aria-label="Explore food">
+            <h2>Explore</h2>
+            <button type="button" onClick={() => navigate('user-login')}>Surplus marketplace</button>
+            <button type="button" onClick={() => navigate('user-login')}>Browse meals</button>
+            <a href="#how">Food waste prevention</a>
+          </nav>
+          <nav className="sp-footer-links" aria-label="For restaurants">
+            <h2>For restaurants</h2>
+            <button type="button" onClick={() => navigate('admin-login')}>Restaurant dashboard</button>
+            <button type="button" onClick={() => navigate('admin-login')}>Demand forecasting</button>
+            <button type="button" onClick={() => navigate('admin-login')}>Inventory &amp; waste risk</button>
+          </nav>
+          <nav className="sp-footer-links" aria-label="My account">
+            <h2>My account</h2>
+            <button type="button" onClick={() => navigate('user-login')}>Sign in</button>
+            <button type="button" onClick={() => navigate('user-register')}>Register</button>
           </nav>
         </div>
       </div>
