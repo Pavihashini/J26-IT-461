@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import BrandMark from '../components/BrandMark.jsx';
-import { ArrowRight, ArrowUpRight, Check, ChefHat, ChevronRight, Home, Leaf, Menu, ShieldAlert, ShieldCheck, ShoppingBag, UserRound, X } from 'lucide-react';
+import { ArrowRight, Check, ChefHat, ChevronRight, Home, Leaf, Menu, ShieldAlert, ShieldCheck, ShoppingBag, UserRound, X } from 'lucide-react';
 import './HomePage.css';
 
 const FEATURES = [
@@ -54,7 +54,8 @@ export default function HomePage({ onNavigate }) {
           <button type="button" className="home-link" onClick={() => navigate('admin-login')}><ShieldCheck size={15} /> For restaurants</button>
         </nav>
         <div className="sp-header-actions">
-          <button type="button" className="home-cta small" onClick={() => navigate('user-login')}>Log in <ArrowUpRight size={16} /></button>
+          <button type="button" className="home-cta small sp-sign-in" onClick={() => navigate('user-login')}>Sign in</button>
+          <button type="button" className="home-cta small sp-register" onClick={() => navigate('user-register')}>Register</button>
           <button type="button" className="sp-menu-toggle" ref={menuButton} aria-expanded={menuOpen} aria-controls="smartplate-navigation" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} onClick={() => setMenuOpen(open => !open)}>{menuOpen ? <X size={21} /> : <Menu size={21} />}</button>
         </div>
       </div>

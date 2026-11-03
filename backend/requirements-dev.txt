@@ -1,0 +1,4 @@
+-r requirements.txt
+
+# TestClient dependency for the installed Starlette version.
+httpx2==2.16.0

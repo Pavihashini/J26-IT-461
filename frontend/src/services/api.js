@@ -108,11 +108,11 @@ export function loginUser(email, password) {
   });
 }
 
-export function registerUser(fullName, email, password) {
+export function registerUser(fullName, email, password, profile = {}) {
   return requestJson('/api/auth/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ full_name: fullName, email, password }),
+    body: JSON.stringify({ ...profile, full_name: fullName, email, password }),
   });
 }
 

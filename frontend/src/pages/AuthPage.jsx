@@ -1,16 +1,17 @@
 import BrandMark from '../components/BrandMark.jsx';
+import RegistrationForm from '../components/RegistrationForm.jsx';
 import React, { useState } from 'react';
-import { ArrowLeft, Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck, ShoppingBag, User } from 'lucide-react';
-import { loginUser, registerUser } from '../services/api.js';
+import { ArrowLeft, Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck, ShoppingBag } from 'lucide-react';
+import { loginUser } from '../services/api.js';
 
 const VARIANTS = {
   user: {
     badge: 'Customer portal',
     icon: ShoppingBag,
     headline: 'Good food, rescued before it goes to waste.',
-    blurb: 'Browse surplus dishes from local restaurants and place a bid at a fraction of the price.',
+    blurb: '',
     points: ['Live surplus auctions', 'Save up to 60% on fresh meals', 'Help cut restaurant food waste'],
-    lead: 'Sign in to browse and bid on surplus food.',
+    lead: '',
     role: 'user',
   },
   admin: {
@@ -28,10 +29,8 @@ export default function AuthPage({ variant = 'user', initialMode = 'login', onAu
   const copy = VARIANTS[variant];
   const isAdmin = variant === 'admin';
   const [mode, setMode] = useState(initialMode);
-  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -48,17 +47,9 @@ export default function AuthPage({ variant = 'user', initialMode = 'login', onAu
     event.preventDefault();
     setError('');
 
-    if (isRegister) {
-      if (fullName.trim().length < 2) return setError('Enter your full name.');
-      if (password.length < 8) return setError('Password must be at least 8 characters.');
-      if (password !== confirm) return setError('Passwords do not match.');
-    }
-
     setLoading(true);
     try {
-      const session = isRegister
-        ? await registerUser(fullName.trim(), email.trim(), password)
-        : await loginUser(email.trim(), password);
+      const session = await loginUser(email.trim(), password);
       if (session.user.role !== copy.role) {
         setError(isAdmin
           ? 'This account is not an admin account. Use the customer login instead.'
@@ -73,6 +64,11 @@ export default function AuthPage({ variant = 'user', initialMode = 'login', onAu
     }
   };
 
+  if (isRegister) return <div className="registration-page">
+    <header className="registration-header"><button type="button" className="auth-brand-link" onClick={() => onNavigate('home')}><BrandMark /><span><strong>SmartPlate</strong><small>Restaurant intelligence</small></span></button><button type="button" className="registration-back" onClick={() => onNavigate('home')}><ArrowLeft size={16} /> Back to home</button></header>
+    <RegistrationForm onAuthenticated={onAuthenticated} onSignIn={() => switchMode('login')} />
+  </div>;
+
   return <div className={`auth-page ${isAdmin ? 'admin' : 'customer'}`}>
     <aside className="auth-aside">
       <span className="orb orb-a" /><span className="orb orb-b" /><span className="orb orb-c" />
@@ -84,11 +80,10 @@ export default function AuthPage({ variant = 'user', initialMode = 'login', onAu
       <div className="auth-aside-body">
         <span className="auth-badge"><BadgeIcon size={14} /> {copy.badge}</span>
         <h2>{copy.headline}</h2>
-        <p>{copy.blurb}</p>
+        {copy.blurb && <p>{copy.blurb}</p>}
         <ul>{copy.points.map((point) => <li key={point}><i />{point}</li>)}</ul>
       </div>
 
-      <div className="auth-aside-foot">Research prototype · J26 · IT · 461</div>
     </aside>
 
     <main className="auth-main">
@@ -97,16 +92,14 @@ export default function AuthPage({ variant = 'user', initialMode = 'login', onAu
       <form className="auth-card" onSubmit={submit} noValidate>
         <div className="auth-icon"><BadgeIcon size={22} /></div>
         <h1>{isRegister ? 'Create your account' : isAdmin ? 'Admin sign in' : 'Welcome back'}</h1>
-        <p className="auth-lead">{isRegister ? 'Register to browse and bid on surplus food.' : copy.lead}</p>
+        {copy.lead && <p className="auth-lead">{copy.lead}</p>}
 
         {notice && !error && <div className="auth-message info" role="status">{notice}</div>}
         {error && <div className="auth-message error" role="alert">{error}</div>}
 
-        {isRegister && <label><span>Full name</span><div className="field"><User size={16} /><input type="text" autoComplete="name" placeholder="Your full name" value={fullName} onChange={(event) => setFullName(event.target.value)} required /></div></label>}
-        <label><span>Email</span><div className="field"><Mail size={16} /><input type="email" autoComplete="email" placeholder={isAdmin ? 'admin@restaurant.com' : 'you@example.com'} value={email} onChange={(event) => setEmail(event.target.value)} required /></div></label>
+        <label><span>{isAdmin ? 'Email' : 'Email or mobile number'}</span><div className="field"><Mail size={16} /><input type={isAdmin ? 'email' : 'text'} autoComplete="username" placeholder={isAdmin ? 'admin@restaurant.com' : 'Email or 0771234567'} value={email} onChange={(event) => setEmail(event.target.value)} required /></div></label>
         <label><span>Password</span><div className="field"><Lock size={16} /><input type={showPassword ? 'text' : 'password'} autoComplete={isRegister ? 'new-password' : 'current-password'} placeholder="••••••••" value={password} onChange={(event) => setPassword(event.target.value)} required />
           <button type="button" className="field-toggle" onClick={() => setShowPassword((shown) => !shown)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}</button></div></label>
-        {isRegister && <label><span>Confirm password</span><div className="field"><Lock size={16} /><input type={showPassword ? 'text' : 'password'} autoComplete="new-password" placeholder="Repeat password" value={confirm} onChange={(event) => setConfirm(event.target.value)} required /></div></label>}
 
         <button type="submit" className="button-primary auth-submit" disabled={loading}>
           {loading ? <><Loader2 size={15} className="spin" /> Please wait…</> : isRegister ? 'Create account' : isAdmin ? 'Sign in to dashboard' : 'Log in'}
