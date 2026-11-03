@@ -1,5 +1,6 @@
+import BrandMark from './components/BrandMark.jsx';
 import React, { useEffect, useState } from 'react';
-import { Bell, ChefHat, Leaf, LayoutDashboard, Loader2, LogOut, ShieldAlert, ShoppingBag, Sprout } from 'lucide-react';
+import { Bell, ChefHat, Leaf, LayoutDashboard, Loader2, LogOut, ShieldAlert, ShoppingBag } from 'lucide-react';
 import DemandForecastPage from './pages/DemandForecastPage.jsx';
 import InventoryRiskPage from './pages/InventoryRiskPage.jsx';
 import SurplusBiddingPage from './pages/SurplusBiddingPage.jsx';
@@ -54,7 +55,7 @@ function Dashboard({ user, onLogout }) {
 
   return <div className="app-shell">
     <aside className="sidebar">
-      <div className="brand-lockup"><div className="brand-mark"><Sprout size={22} strokeWidth={2} /></div><div><strong>SmartPlate</strong><span>Restaurant intelligence</span></div></div>
+      <div className="brand-lockup"><BrandMark /><div><strong>SmartPlate</strong><span>Restaurant intelligence</span></div></div>
       <div className="workspace-switch"><span className="workspace-logo">GR</span><div><small>WORKSPACE</small><strong>Green Room Bistro</strong></div><span className="workspace-chevron">⌄</span></div>
       <div className="nav-label">RESEARCH COMPONENTS</div>
       <nav className="main-navigation" aria-label="Main components">

@@ -1,5 +1,6 @@
+import BrandMark from '../components/BrandMark.jsx';
 import React, { useState } from 'react';
-import { ArrowLeft, Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck, ShoppingBag, Sprout, User } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck, ShoppingBag, User } from 'lucide-react';
 import { loginUser, registerUser } from '../services/api.js';
 
 const VARIANTS = {
@@ -76,7 +77,7 @@ export default function AuthPage({ variant = 'user', onAuthenticated, onNavigate
     <aside className="auth-aside">
       <span className="orb orb-a" /><span className="orb orb-b" /><span className="orb orb-c" />
       <button type="button" className="auth-brand-link" onClick={() => onNavigate('home')}>
-        <span className="brand-mark"><Sprout size={22} strokeWidth={2} /></span>
+        <BrandMark />
         <span><strong>SmartPlate</strong><small>Restaurant intelligence</small></span>
       </button>
 

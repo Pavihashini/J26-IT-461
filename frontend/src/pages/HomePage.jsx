@@ -1,5 +1,7 @@
 import React from 'react';
-import { ArrowRight, ChefHat, Leaf, ShieldAlert, ShieldCheck, ShoppingBag, Sprout } from 'lucide-react';
+import BrandMark from '../components/BrandMark.jsx';
+import { ArrowRight, Check, ChefHat, ChevronRight, ShieldAlert, ShieldCheck, ShoppingBag } from 'lucide-react';
+import './HomePage.css';
 
 const FEATURES = [
   { icon: ChefHat, tone: 'green', title: 'Demand forecasting', text: 'Predict how many portions each dish will sell, so the kitchen prepares the right quantity.' },
@@ -10,55 +12,45 @@ const FEATURES = [
 const STATS = [
   { value: 'Daily', label: 'demand forecasts' },
   { value: 'Early', label: 'expiry alerts' },
-  { value: 'Live', label: 'surplus auctions' },
+  { value: 'Smart', label: 'surplus recovery' },
 ];
 
 export default function HomePage({ onNavigate }) {
-  return <div className="home">
+  return <div className="home smartplate-home">
     <header className="home-nav">
       <button type="button" className="home-logo" onClick={() => onNavigate('home')}>
-        <span className="brand-mark"><Sprout size={22} strokeWidth={2} /></span>
+        <BrandMark />
         <span><strong>SmartPlate</strong><small>Restaurant intelligence</small></span>
       </button>
-      <nav>
+      <nav aria-label="Website navigation">
         <a href="#features">Features</a>
         <a href="#how">How it works</a>
-        <button type="button" className="home-link" onClick={() => onNavigate('admin-login')}>Admin</button>
+        <button type="button" className="home-link" onClick={() => onNavigate('admin-login')}>For restaurants</button>
         <button type="button" className="home-cta small" onClick={() => onNavigate('user-login')}>Log in</button>
       </nav>
     </header>
 
-    <section className="home-hero">
-      <span className="orb orb-a" /><span className="orb orb-b" /><span className="orb orb-c" />
+    <section className="home-hero home-hero-simple">
       <div className="hero-copy">
-        <span className="hero-pill"><Leaf size={14} /> Proactive food waste prevention</span>
-        <h1>Cook what you'll sell.<br /><em>Rescue</em> what you won't.</h1>
-        <p>SmartPlate helps restaurants forecast demand, catch waste risk early and sell surplus food to people who want it.</p>
+        <span className="hero-pill"><span className="sp-pill-dot" /> A smarter way to serve</span>
+        <h1>Better planning.<br /><em>Less waste.</em><br />More possibility.</h1>
         <div className="hero-actions">
-          <button type="button" className="home-cta" onClick={() => onNavigate('user-login')}>Browse surplus food <ArrowRight size={16} /></button>
-          <button type="button" className="home-cta ghost" onClick={() => onNavigate('admin-login')}><ShieldCheck size={16} /> Admin dashboard</button>
+          <button type="button" className="home-cta" onClick={() => onNavigate('admin-login')}>Open your dashboard <ArrowRight size={17} /></button>
+          <button type="button" className="home-cta ghost" onClick={() => onNavigate('user-login')}>Find surplus food <ChevronRight size={17} /></button>
         </div>
+        <div className="sp-hero-note"><Check size={15} /> Thoughtful tools, from kitchen to community.</div>
         <div className="hero-stats">{STATS.map((stat) => <div key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></div>)}</div>
       </div>
 
-      <div className="hero-visual" aria-hidden="true">
-        <div className="float-card fc-main">
-          <span className="fc-tag">Surplus · ends in 42m</span>
-          <strong>Roasted veg lasagna</strong>
-          <small>Green Room Bistro · 6 portions</small>
-          <div className="fc-bid"><span>Current bid</span><b>$4.50</b></div>
-        </div>
-        <div className="float-card fc-risk"><ShieldAlert size={18} /><div><strong>Spinach · 2 days left</strong><small>High waste risk</small></div></div>
-        <div className="float-card fc-forecast"><ChefHat size={18} /><div><strong>Tomorrow's demand</strong><small>+12% · prep 48 portions</small></div></div>
-      </div>
     </section>
 
     <section className="home-section" id="features">
-      <span className="section-eyebrow">What it does</span>
-      <h2>One platform, from kitchen to customer</h2>
+      <span className="section-eyebrow">LESS GUESSWORK. MORE GOOD.</span>
+      <h2>Everything your kitchen needs.<br />Nothing it doesn’t.</h2>
+      <p className="sp-section-intro">Three connected tools to help you make the most of every ingredient.</p>
       <div className="feature-grid">
-        {FEATURES.map(({ icon: Icon, tone, title, text }) => <article key={title} className="feature-card">
-          <span className={`feature-icon ${tone}`}><Icon size={22} /></span>
+        {FEATURES.map(({ icon: Icon, tone, title, text }, index) => <article key={title} className="feature-card">
+          <div className="sp-feature-top"><span className={`feature-icon ${tone}`}><Icon size={23} /></span><span>0{index + 1}</span></div>
           <h3>{title}</h3>
           <p>{text}</p>
         </article>)}

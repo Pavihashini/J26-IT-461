@@ -1,0 +1,118 @@
+/* SmartPlate identity and public landing page. */
+.smartplate-mark { background: transparent; padding: 0; overflow: hidden; border-radius: 13px; }
+.smartplate-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.smartplate-home { --sp-ink: #203c2d; --sp-muted: #657467; --sp-line: #e1e7dc; font-family: 'Segoe UI', system-ui, sans-serif; background: #f8f9f3; }
+.smartplate-home button, .smartplate-home a { -webkit-tap-highlight-color: transparent; }
+.smartplate-home button:focus-visible, .smartplate-home a:focus-visible { outline: 3px solid #a6bf87; outline-offset: 5px; }
+.smartplate-home .home-nav { padding: 20px max(28px, calc((100vw - 1280px) / 2)); background: #f8f9f3ed; border-color: #e5e9df; }
+.smartplate-home .home-logo { gap: 11px; }
+.smartplate-home .home-logo .brand-mark { width: 46px; height: 46px; flex-basis: 46px; }
+.smartplate-home .home-logo strong { font-size: 23px; letter-spacing: -.8px; color: #203c2d; }
+.smartplate-home .home-logo small { color: #6b796b; font-size: 11px; margin-top: 3px; }
+.smartplate-home .home-nav nav { gap: 30px; }
+.smartplate-home .home-nav nav a, .smartplate-home .home-link { color: #536952; font-size: 14px; font-weight: 600; }
+.smartplate-home .home-cta { background: #2c6548; border-radius: 9px; padding: 14px 20px; font-size: 14px; font-weight: 650; box-shadow: 0 4px 8px #234e3b0c; min-height: 47px; }
+.smartplate-home .home-cta:hover { background: #234e3b; transform: translateY(-1px); box-shadow: 0 6px 16px #234e3b16; }
+.smartplate-home .home-cta.small { padding: 10px 23px; min-height: 41px; }
+.smartplate-home .home-cta.ghost { background: transparent; color: #31563c; border-color: #d7e0cf; box-shadow: none; }
+.smartplate-home .home-cta.ghost:hover { background: #eef3e6; }
+.smartplate-home .home-hero { max-width: 1280px; padding: 72px 28px 68px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 76px; min-height: 690px; }
+.smartplate-home .hero-pill { background: #eaf1e1; border: 1px solid #dfe8d5; padding: 7px 12px; font-size: 11px; color: #4d7043; font-weight: 600; letter-spacing: .3px; gap: 7px; }
+.sp-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: #78994f; box-shadow: 0 0 0 3px #78994f12; }
+.smartplate-home .home-hero h1 { color: var(--sp-ink); font-size: clamp(40px, 4.2vw, 58px); letter-spacing: -2.2px; line-height: 1.12; font-weight: 750; margin: 23px 0 22px; }
+.smartplate-home .home-hero h1 em { background: none; color: #6c8e50; }
+.smartplate-home .home-hero p { font-size: 16px; line-height: 1.8; max-width: 440px; margin: 0 0 26px; color: var(--sp-muted); }
+.smartplate-home .hero-actions { gap: 12px; }
+.sp-hero-note { font-size: 11px; color: #78856d; display: flex; gap: 7px; align-items: center; margin-top: 17px; line-height: 1.5; }
+.sp-hero-note svg { color: #739152; }
+.smartplate-home .hero-stats { gap: 0; margin-top: 33px; padding-top: 25px; border-top: 1px solid var(--sp-line); max-width: 415px; }
+.smartplate-home .hero-stats > div { padding-right: 27px; margin-right: 27px; border-right: 1px solid #dce4d4; }
+.smartplate-home .hero-stats > div:last-child { padding-right: 0; margin-right: 0; border-right: 0; }
+.smartplate-home .hero-stats strong { font-size: 18px; font-weight: 650; margin-bottom: 4px; color: #35593d; }
+.smartplate-home .hero-stats span { font-size: 11px; color: #7a8572; }
+.smartplate-home .home-section { max-width: 1280px; padding: 72px 28px; scroll-margin-top: 100px; }
+.smartplate-home #features { border-top: 1px solid #e5eade; }
+.smartplate-home .section-eyebrow { color: #9a855b; font-size: 10px; letter-spacing: 1.6px; font-weight: 650; }
+.smartplate-home .home-section h2 { font-size: clamp(27px, 3vw, 37px); letter-spacing: -1.1px; line-height: 1.25; margin: 13px 0 15px; font-weight: 650; }
+.sp-section-intro { color: var(--sp-muted); font-size: 14px; line-height: 1.7; margin: 0 0 33px; }
+.smartplate-home .feature-grid { gap: 18px; }
+.smartplate-home .feature-card { text-align: left; padding: 26px; background: #fffefa; border-radius: 12px; border-color: #e1e7d9; box-shadow: none; }
+.smartplate-home .feature-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px #234e3b08; }
+.sp-feature-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 23px; }
+.sp-feature-top > span:last-child { color: #bdc7b3; font-size: 12px; font-weight: 500; }
+.smartplate-home .feature-icon { margin: 0; border-radius: 10px; width: 45px; height: 45px; }
+.smartplate-home .feature-card h3 { font-size: 18px; letter-spacing: -.4px; font-weight: 650; }
+.smartplate-home .feature-card p { font-size: 14px; line-height: 1.8; color: var(--sp-muted); }
+.smartplate-home .home-section.flow { max-width: none; padding: 65px 28px; background: #244d3a; }
+.smartplate-home .home-section.flow h2 { margin-bottom: 32px; }
+.smartplate-home .flow-steps { gap: 20px; }
+.smartplate-home .flow-steps li { background: #ffffff05; border-color: #ffffff16; border-radius: 12px; padding: 24px; }
+.smartplate-home .flow-steps b { background: #c4d6b2; width: 31px; height: 31px; font-size: 12px; }
+.smartplate-home .flow-steps strong { font-size: 18px; font-weight: 600; }
+.smartplate-home .flow-steps span { font-size: 14px; }
+.smartplate-home .portal-card { border-radius: 12px; padding: 25px; box-shadow: none; background: #fffefa; }
+.smartplate-home .portal-card:hover { box-shadow: 0 8px 24px #234e3b08; transform: translateY(-2px); }
+.smartplate-home .portal-card strong { font-size: 18px; font-weight: 600; }
+.smartplate-home .portal-card > div { min-width: 0; }
+.smartplate-home .portal-card span:not(.portal-icon) { line-height: 1.7; }
+.smartplate-home .portal-icon { width: 45px; height: 45px; flex: 0 0 45px; border-radius: 10px; }
+.smartplate-home .home-footer { padding: 25px max(28px, calc((100vw - 1224px) / 2)); font-size: 11px; color: #829078; }
+@media (max-width: 1100px) {
+ .smartplate-home .home-hero { gap: 35px; padding-top: 55px; padding-bottom: 55px; }
+ .smartplate-home .home-hero h1 { font-size: 46px; }
+ .smartplate-home .hero-actions { flex-direction: column; align-items: flex-start; }
+ .smartplate-home .home-nav nav { gap: 22px; }
+}
+@media (max-width: 900px) {
+ .smartplate-home .home-hero { grid-template-columns: minmax(0,1fr); gap: 20px; padding: 48px 28px; max-width: 660px; }
+ .smartplate-home .hero-actions { flex-direction: row; }
+ .smartplate-home .home-hero h1 { font-size: clamp(38px, 7vw, 52px); }
+ .smartplate-home .home-section { padding: 52px 28px; }
+ .smartplate-home .feature-grid { grid-template-columns: minmax(0,1fr); }
+ .smartplate-home .home-nav nav { gap: 18px; }
+ .smartplate-home .home-nav .home-link { font-size: 12px; }
+}
+@media (max-width: 540px) {
+ .smartplate-home .home-nav { padding: 15px 19px; gap: 12px; flex-wrap: wrap; }
+ .smartplate-home .home-logo .brand-mark { width: 39px; height: 39px; flex-basis: 39px; border-radius: 12px; }
+ .smartplate-home .home-logo strong { font-size: 20px; }
+ .smartplate-home .home-logo small { font-size: 9px; }
+ .smartplate-home .home-nav nav { gap: 13px; }
+ .smartplate-home .home-nav .home-link { max-width: 68px; font-size: 11px; line-height: 1.5; }
+ .smartplate-home .home-cta.small { padding: 9px 16px; font-size: 12px; min-height: 37px; }
+ .smartplate-home .home-hero { padding: 40px 20px 34px; gap: 20px; }
+ .smartplate-home .home-hero h1 { font-size: 40px; letter-spacing: -1.6px; }
+ .smartplate-home .home-hero p { font-size: 15px; }
+ .smartplate-home .hero-actions { flex-direction: column; align-items: stretch; gap: 10px; }
+ .smartplate-home .hero-stats { justify-content: space-between; max-width: 100%; }
+ .smartplate-home .hero-stats > div { padding-right: 13px; margin-right: 0; }
+ .smartplate-home .hero-stats strong { font-size: 17px; }
+ .smartplate-home .hero-stats span { font-size: 10px; }
+ .smartplate-home .home-section { padding: 44px 20px; }
+ .smartplate-home .home-section h2 { font-size: 29px; }
+ .smartplate-home .feature-card { padding: 23px; }
+ .smartplate-home .portal-card { padding: 21px 18px; gap: 13px; }
+ .smartplate-home .portal-card > svg { flex-shrink: 0; }
+ .smartplate-home .portal-card strong { font-size: 16px; }
+ .smartplate-home .home-footer { padding: 23px 20px; }
+}
+@media (max-width: 360px) {
+ .smartplate-home .home-nav .home-link { display: none; }
+ .smartplate-home .home-hero h1 { font-size: 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+ .smartplate-home *, .smartplate-home *::before { animation: none; transition: none; scroll-behavior: auto; }
+}
+
+/* The introduction stands on its own without the sample dashboard. */
+.smartplate-home .home-hero.home-hero-simple { display: block; min-height: 0; max-width: 1000px; padding: 72px 28px; text-align: center; }
+.home-hero-simple .hero-copy { max-width: 740px; margin: 0 auto; }
+.smartplate-home .home-hero-simple p { max-width: 520px; margin-left: auto; margin-right: auto; }
+.smartplate-home .home-hero-simple .hero-actions { justify-content: center; align-items: center; flex-direction: row; }
+.home-hero-simple .sp-hero-note { justify-content: center; }
+.smartplate-home .home-hero-simple .hero-stats { margin-left: auto; margin-right: auto; justify-content: center; }
+@media (max-width: 540px) {
+ .smartplate-home .home-hero.home-hero-simple { padding: 44px 20px; }
+ .smartplate-home .home-hero-simple .hero-actions { flex-direction: column; align-items: stretch; }
+ .smartplate-home .home-hero-simple .hero-stats { justify-content: space-between; }
+}
