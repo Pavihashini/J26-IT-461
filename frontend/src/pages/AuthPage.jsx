@@ -1,8 +1,9 @@
 import BrandMark from '../components/BrandMark.jsx';
 import RegistrationForm from '../components/RegistrationForm.jsx';
 import React, { useState } from 'react';
-import { ArrowLeft, Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, Coins, Eye, EyeOff, Gavel, Leaf, Loader2, Lock, Mail, ShieldCheck, ShoppingBag } from 'lucide-react';
 import { loginUser } from '../services/api.js';
+import './AuthPage.css';
 
 const VARIANTS = {
   user: {
@@ -79,9 +80,12 @@ export default function AuthPage({ variant = 'user', initialMode = 'login', onAu
 
       <div className="auth-aside-body">
         <span className="auth-badge"><BadgeIcon size={14} /> {copy.badge}</span>
-        <h2>{copy.headline}</h2>
+        <h2>{isAdmin ? copy.headline : <>Good food, <em>rescued</em> before it goes to waste.</>}</h2>
         {copy.blurb && <p>{copy.blurb}</p>}
-        <ul>{copy.points.map((point) => <li key={point}><i />{point}</li>)}</ul>
+        <ul>{copy.points.map((point, index) => {
+          const Icon = [Gavel, Coins, Leaf][index];
+          return <li key={point}>{isAdmin ? <i /> : <span className={`auth-benefit-icon benefit-${index}`}><Icon size={19} strokeWidth={1.7} /></span>}<span>{point}</span></li>;
+        })}</ul>
       </div>
 
     </aside>
