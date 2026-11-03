@@ -229,3 +229,10 @@
  .home-hero-burger::after { background: #09160ea8; }
  .home-hero-burger .sp-hero-photo img { object-position: 57% center; }
 }
+
+/* Ingredient photography behind the features, softened for legible copy. */
+.smartplate-home #features { max-width: none; margin: 0; padding-inline: max(28px, calc((100% - 1224px) / 2)); background-color: #f8f9f3; background-image: linear-gradient(rgba(248,249,243,.88), rgba(248,249,243,.92)), url('/images/smartplate-kitchen-ingredients.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; }
+.smartplate-home #features .feature-card { background: #fffefa; box-shadow: 0 6px 22px rgba(35,78,59,.04); }
+@media (max-width: 540px) {
+ .smartplate-home #features { padding-inline: 20px; background-position: 55% center; }
+}
