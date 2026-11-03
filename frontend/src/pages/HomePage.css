@@ -201,3 +201,31 @@
  .sp-footer-links h2 { font-size: 16px; }
  .sp-footer-links a, .sp-footer-links button { font-size: 13px; }
 }
+
+
+/* Full-screen burger photograph in the home page hero. */
+.smartplate-home .home-hero.home-hero-burger { position: relative; display: flex; align-items: center; isolation: isolate; overflow: hidden; width: 100%; max-width: none; min-height: calc(100svh - 85px); padding: 70px max(28px, calc((100vw - 1224px) / 2)); background: #18291f; }
+.home-hero-burger .hero-copy { position: relative; z-index: 2; min-width: 0; width: 100%; max-width: 640px; }
+.home-hero-burger .sp-hero-photo { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.home-hero-burger .sp-hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.home-hero-burger::after { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(9,22,14,.9), rgba(9,22,14,.67) 38%, rgba(9,22,14,.12) 80%); pointer-events: none; }
+.smartplate-home .home-hero-burger h1 { color: #fffdf3; }
+.smartplate-home .home-hero-burger h1 em { color: #c3dba5; }
+.smartplate-home .home-hero-burger .hero-pill { color: #e6eedb; background: #ffffff12; border-color: #ffffff40; }
+.home-hero-burger .sp-pill-dot { background: #bad399; }
+.smartplate-home .home-hero-burger .home-cta.ghost { background: #ffffff10; color: #f7f9ef; border-color: #ffffff75; }
+.smartplate-home .home-hero-burger .home-cta.ghost:hover { background: #ffffff25; }
+.home-hero-burger .sp-hero-note, .home-hero-burger .sp-hero-note svg { color: #d8e4cf; }
+.smartplate-home .home-hero-burger .hero-stats { border-color: #ffffff40; }
+.smartplate-home .home-hero-burger .hero-stats > div { border-color: #ffffff40; }
+.smartplate-home .home-hero-burger .hero-stats strong { color: #edf4e3; }
+.smartplate-home .home-hero-burger .hero-stats span { color: #d7e2cc; }
+@media (max-width: 900px) {
+ .smartplate-home .home-hero.home-hero-burger { min-height: calc(100svh - 85px); padding: 60px 28px; }
+ .home-hero-burger::after { background: linear-gradient(90deg, #09160ee0, #09160e6b); }
+}
+@media (max-width: 540px) {
+ .smartplate-home .home-hero.home-hero-burger { min-height: calc(100svh - 70px); padding: 50px 20px; }
+ .home-hero-burger::after { background: #09160ea8; }
+ .home-hero-burger .sp-hero-photo img { object-position: 57% center; }
+}

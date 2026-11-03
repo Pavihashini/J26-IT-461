@@ -60,7 +60,7 @@ export default function HomePage({ onNavigate }) {
       </div>
     </header>
 
-    <section className="home-hero home-hero-simple">
+    <section className="home-hero home-hero-burger">
       <div className="hero-copy">
         <span className="hero-pill"><span className="sp-pill-dot" /> A smarter way to serve</span>
         <h1>Better planning.<br /><em>Less waste.</em><br />More possibility.</h1>
@@ -71,7 +71,7 @@ export default function HomePage({ onNavigate }) {
         <div className="sp-hero-note"><Check size={15} /> Thoughtful tools, from kitchen to community.</div>
         <div className="hero-stats">{STATS.map((stat) => <div key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></div>)}</div>
       </div>
-
+      <div className="sp-hero-photo"><img src="/images/smartplate-burger.jpg" alt="" aria-hidden="true" width="1920" height="1080" fetchPriority="high" decoding="async" /></div>
     </section>
 
     <section className="home-section" id="features">
