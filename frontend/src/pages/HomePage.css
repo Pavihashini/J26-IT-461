@@ -236,3 +236,10 @@
 @media (max-width: 540px) {
  .smartplate-home #features { padding-inline: 20px; background-position: 55% center; }
 }
+
+/* Dining imagery behind the customer and restaurant entry points. */
+.smartplate-home .home-section.portals { max-width: none; margin: 0; padding-inline: max(28px, calc((100% - 1224px) / 2)); background-color: #f8f9f3; background-image: linear-gradient(rgba(248,249,243,.84), rgba(248,249,243,.9)), url('/images/smartplate-dining.jpg'); background-size: cover; background-position: center 58%; background-repeat: no-repeat; }
+.smartplate-home .portals .portal-card { background: #fffefa; box-shadow: 0 5px 18px rgba(35,78,59,.05); }
+@media (max-width: 540px) {
+ .smartplate-home .home-section.portals { padding-inline: 20px; background-position: center; }
+}
