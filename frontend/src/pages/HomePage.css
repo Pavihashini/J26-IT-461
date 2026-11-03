@@ -116,3 +116,71 @@
  .smartplate-home .home-hero-simple .hero-actions { flex-direction: column; align-items: stretch; }
  .smartplate-home .home-hero-simple .hero-stats { justify-content: space-between; }
 }
+
+/* SmartPlate public header and footer. */
+.smartplate-home .home-nav.sp-site-header { padding: 16px 28px; background: rgba(248,249,243,.94); border-bottom: 1px solid #dfe6d7; box-shadow: 0 3px 16px #203c2d04; backdrop-filter: blur(18px); }
+.sp-header-inner { width: 100%; max-width: 1224px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+.sp-site-header .home-logo, .sp-site-footer .home-logo { text-decoration: none; flex-shrink: 0; }
+.sp-brand-dot { color: #aa8c54; }
+.smartplate-home .home-nav .home-logo strong { font-size: 24px; font-weight: 750; }
+.smartplate-home .home-nav .home-logo small { font-size: 11px; letter-spacing: .1px; }
+.smartplate-home .sp-site-header .sp-header-navigation { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 5px; border: 1px solid #e5e9dd; border-radius: 12px; background: #eef2e780; }
+.smartplate-home .sp-site-header .sp-header-navigation a, .smartplate-home .sp-site-header .sp-header-navigation .home-link { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 17px; color: #53644b; font-size: 13px; font-weight: 600; line-height: 1.5; text-decoration: none; border-radius: 8px; white-space: nowrap; max-width: none; transition: background .15s, color .15s; }
+.smartplate-home .sp-site-header .sp-header-navigation a:hover, .smartplate-home .sp-site-header .sp-header-navigation .home-link:hover { background: #fffefa; color: #234e3b; }
+.sp-header-actions { display: flex; align-items: center; gap: 10px; }
+.smartplate-home .sp-site-header .home-cta.small { border-radius: 10px; min-height: 44px; padding: 11px 21px; font-size: 13px; gap: 12px; }
+.sp-menu-toggle { display: none; width: 44px; height: 44px; padding: 0; border: 1px solid #dce5d3; border-radius: 10px; background: #f5f8ee; color: #345b3e; place-items: center; }
+.smartplate-home .home-footer.sp-site-footer { display: block; padding: 0 28px; color: #d1ddcc; border-top: 0; background: #183e2d; position: relative; }
+.sp-site-footer::before { content: ''; display: block; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #779763, #bda16f 48%, #436b4b); }
+.sp-footer-inner { max-width: 1224px; margin: 0 auto; }
+.sp-footer-top { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 42px; padding: 61px 0 48px; align-items: start; }
+.smartplate-home .sp-site-footer .home-logo { gap: 11px; }
+.sp-site-footer .home-logo .brand-mark { width: 46px; height: 46px; flex-basis: 46px; border-radius: 13px; box-shadow: 0 0 0 1px #b4c7a930; }
+.smartplate-home .sp-site-footer .home-logo strong { color: #f1f5e9; font-size: 24px; letter-spacing: -.8px; }
+.smartplate-home .sp-site-footer .home-logo small { color: #b4c7ad; font-size: 11px; }
+.sp-footer-brand p { margin: 23px 0 18px; font-size: 21px; font-weight: 500; line-height: 1.5; letter-spacing: -.4px; color: #e5eddb; }
+.sp-purpose { display: flex; align-items: center; gap: 7px; color: #b2c4a9; font-size: 11px; line-height: 1.7; }
+.sp-purpose svg { flex-shrink: 0; color: #adc58c; }
+.sp-footer-links { display: flex; flex-direction: column; align-items: stretch; gap: 5px; }
+.sp-footer-links h2 { color: #a9be95; font-size: 11px; text-transform: uppercase; letter-spacing: 1.4px; font-weight: 600; margin: 7px 0 17px; line-height: 1.5; }
+.sp-footer-links a, .sp-footer-links button { display: flex; align-items: center; justify-content: space-between; text-align: left; gap: 10px; padding: 9px 0; background: none; border: 0; color: #d3dfcb; font-size: 13px; line-height: 1.6; text-decoration: none; }
+.sp-footer-links a svg, .sp-footer-links button svg { opacity: .3; flex-shrink: 0; transition: opacity .15s; }
+.sp-footer-links a:hover, .sp-footer-links button:hover { color: #fffdf2; }
+.sp-footer-links a:hover svg, .sp-footer-links button:hover svg { opacity: 1; }
+@media (max-width: 1100px) {
+ .sp-header-inner { gap: 18px; }
+ .smartplate-home .sp-site-header .sp-header-navigation a, .smartplate-home .sp-site-header .sp-header-navigation .home-link { padding-left: 12px; padding-right: 12px; }
+ .sp-footer-top { grid-template-columns: 1.3fr 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 900px) {
+ .smartplate-home .home-nav.sp-site-header { padding: 15px 22px; }
+ .sp-header-inner { position: relative; }
+ .sp-menu-toggle { display: grid; }
+ .smartplate-home .sp-site-header .sp-header-navigation { display: none; position: absolute; top: calc(100% + 18px); left: 0; right: 0; padding: 10px; border-radius: 12px; border-color: #dbe4d2; background: #fafcf6; box-shadow: 0 16px 35px #203c2d17; flex-direction: column; align-items: stretch; gap: 5px; }
+ .smartplate-home .sp-site-header .sp-header-navigation.is-open { display: flex; }
+ .smartplate-home .sp-site-header .sp-header-navigation a, .smartplate-home .sp-site-header .sp-header-navigation .home-link { justify-content: flex-start; padding: 14px; font-size: 14px; }
+ .sp-footer-top { gap: 25px; }
+}
+@media (max-width: 620px) {
+ .smartplate-home .home-nav.sp-site-header { padding: 13px 18px; }
+ .smartplate-home .sp-site-header .home-logo .brand-mark { width: 40px; height: 40px; flex-basis: 40px; }
+ .smartplate-home .home-nav .home-logo strong { font-size: 21px; }
+ .smartplate-home .home-nav .home-logo small { font-size: 9px; }
+ .smartplate-home .sp-site-header .home-cta.small { padding: 10px 14px; font-size: 12px; gap: 8px; }
+ .sp-header-actions { gap: 7px; }
+ .sp-header-inner { gap: 13px; }
+ .smartplate-home .home-footer.sp-site-footer { padding: 0 23px; }
+ .sp-footer-top { grid-template-columns: 1fr 1fr; padding-top: 43px; padding-bottom: 30px; gap: 26px 20px; }
+ .sp-footer-brand { grid-column: 1 / -1; }
+ .sp-footer-brand p { font-size: 21px; margin-top: 19px; }
+ .sp-footer-brand p br { display: none; }
+ .sp-footer-links h2 { font-size: 10px; letter-spacing: 1px; margin-bottom: 9px; }
+ .sp-footer-links a, .sp-footer-links button { font-size: 12px; }
+}
+@media (max-width: 360px) {
+ .smartplate-home .home-nav.sp-site-header { padding-left: 13px; padding-right: 13px; }
+ .smartplate-home .sp-site-header .home-cta.small > svg { display: none; }
+ .smartplate-home .sp-site-header .home-logo { gap: 8px; }
+ .sp-header-inner { gap: 9px; }
+ .sp-menu-toggle { width: 40px; }
+}

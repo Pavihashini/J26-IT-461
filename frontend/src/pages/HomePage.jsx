@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BrandMark from '../components/BrandMark.jsx';
-import { ArrowRight, Check, ChefHat, ChevronRight, ShieldAlert, ShieldCheck, ShoppingBag } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, ChefHat, ChevronRight, Leaf, Menu, ShieldAlert, ShieldCheck, ShoppingBag, X } from 'lucide-react';
 import './HomePage.css';
 
 const FEATURES = [
@@ -16,18 +16,48 @@ const STATS = [
 ];
 
 export default function HomePage({ onNavigate }) {
-  return <div className="home smartplate-home">
-    <header className="home-nav">
-      <button type="button" className="home-logo" onClick={() => onNavigate('home')}>
-        <BrandMark />
-        <span><strong>SmartPlate</strong><small>Restaurant intelligence</small></span>
-      </button>
-      <nav aria-label="Website navigation">
-        <a href="#features">Features</a>
-        <a href="#how">How it works</a>
-        <button type="button" className="home-link" onClick={() => onNavigate('admin-login')}>For restaurants</button>
-        <button type="button" className="home-cta small" onClick={() => onNavigate('user-login')}>Log in</button>
-      </nav>
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef(null);
+  const header = useRef(null);
+  const navigate = (view) => { setMenuOpen(false); onNavigate(view); };
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKey = (event) => {
+      if (event.key === 'Escape') { setMenuOpen(false); menuButton.current?.focus(); }
+    };
+    const onOutsideClick = (event) => {
+      if (!header.current?.contains(event.target)) setMenuOpen(false);
+    };
+    const media = window.matchMedia('(min-width: 901px)');
+    const onResize = () => { if (media.matches) setMenuOpen(false); };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onOutsideClick);
+    media.addEventListener('change', onResize);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onOutsideClick);
+      media.removeEventListener('change', onResize);
+    };
+  }, [menuOpen]);
+
+  return <div className="home smartplate-home" id="top">
+    <header className="home-nav sp-site-header" ref={header}>
+      <div className="sp-header-inner">
+        <a className="home-logo" href="#top" aria-label="SmartPlate home" onClick={() => setMenuOpen(false)}>
+          <BrandMark />
+          <span><strong>SmartPlate<span className="sp-brand-dot">.</span></strong><small>Restaurant intelligence</small></span>
+        </a>
+        <nav id="smartplate-navigation" className={`sp-header-navigation ${menuOpen ? 'is-open' : ''}`} aria-label="Website navigation">
+          <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
+          <a href="#how" onClick={() => setMenuOpen(false)}>How it works</a>
+          <button type="button" className="home-link" onClick={() => navigate('admin-login')}><ShieldCheck size={15} /> For restaurants</button>
+        </nav>
+        <div className="sp-header-actions">
+          <button type="button" className="home-cta small" onClick={() => navigate('user-login')}>Log in <ArrowUpRight size={16} /></button>
+          <button type="button" className="sp-menu-toggle" ref={menuButton} aria-expanded={menuOpen} aria-controls="smartplate-navigation" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} onClick={() => setMenuOpen(open => !open)}>{menuOpen ? <X size={21} /> : <Menu size={21} />}</button>
+        </div>
+      </div>
     </header>
 
     <section className="home-hero home-hero-simple">
@@ -80,6 +110,28 @@ export default function HomePage({ onNavigate }) {
       </button>
     </section>
 
-    <footer className="home-footer"><span>SmartPlate · Research prototype</span><span>J26 · IT · 461</span></footer>
+    <footer className="home-footer sp-site-footer">
+      <div className="sp-footer-inner">
+        <div className="sp-footer-top">
+          <div className="sp-footer-brand">
+            <a href="#top" className="home-logo" aria-label="SmartPlate home"><BrandMark /><span><strong>SmartPlate<span className="sp-brand-dot">.</span></strong><small>Restaurant intelligence</small></span></a>
+            <p>A little planning.<br />A lot less waste.</p>
+            <span className="sp-purpose"><Leaf size={15} /> Better kitchens. Thoughtful choices.</span>
+          </div>
+          <nav className="sp-footer-links" aria-label="Explore SmartPlate">
+            <h2>Explore</h2>
+            <a href="#features">Our features <ArrowUpRight size={14} /></a>
+            <a href="#how">How it works <ArrowUpRight size={14} /></a>
+            <button type="button" onClick={() => navigate('user-login')}>Surplus marketplace <ArrowUpRight size={14} /></button>
+          </nav>
+          <nav className="sp-footer-links" aria-label="SmartPlate portals">
+            <h2>Your workspace</h2>
+            <button type="button" onClick={() => navigate('admin-login')}>Restaurant dashboard <ArrowUpRight size={14} /></button>
+            <button type="button" onClick={() => navigate('user-login')}>Customer login <ArrowUpRight size={14} /></button>
+            <a href="#top">Back to top <ArrowUpRight size={14} /></a>
+          </nav>
+        </div>
+      </div>
+    </footer>
   </div>;
 }
