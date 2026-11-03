@@ -77,7 +77,7 @@ export default function AuthPage({ variant = 'user', onAuthenticated, onNavigate
       <span className="orb orb-a" /><span className="orb orb-b" /><span className="orb orb-c" />
       <button type="button" className="auth-brand-link" onClick={() => onNavigate('home')}>
         <span className="brand-mark"><Sprout size={22} strokeWidth={2} /></span>
-        <span><strong>Root &amp; Reuse</strong><small>Restaurant intelligence</small></span>
+        <span><strong>SmartPlate</strong><small>Restaurant intelligence</small></span>
       </button>
 
       <div className="auth-aside-body">

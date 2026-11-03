@@ -1,4 +1,4 @@
-# Root & Reuse — Proactive Food Waste Prevention System
+# SmartPlate — Proactive Food Waste Prevention System
 
 A React frontend-only prototype for the final-year research project **“A Proactive AI-Based Food Waste Prevention System for Restaurants.”** The interface follows the three-component architecture in the supplied presentation and includes the approved Cost & Savings Calculator extension inside Component 2.
 

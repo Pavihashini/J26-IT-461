@@ -1,4 +1,4 @@
-# Complete Source Code — Root & Reuse Food Waste Prevention Frontend
+# Complete Source Code — SmartPlate Food Waste Prevention Frontend
 
 This file lists each project file in full. The ZIP archive is the recommended way to run the project.
 
@@ -37,7 +37,7 @@ This file lists each project file in full. The ZIP archive is the recommended wa
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#234e3b" />
     <meta name="description" content="A proactive AI-based food waste prevention system for restaurants — frontend research prototype." />
-    <title>Root &amp; Reuse | Food Waste Prevention</title>
+    <title>SmartPlate | Food Waste Prevention</title>
   </head>
   <body>
     <div id="root"></div>
@@ -50,7 +50,7 @@ This file lists each project file in full. The ZIP archive is the recommended wa
 ## File: `README.md`
 
 ````markdown
-# Root & Reuse — Proactive Food Waste Prevention System
+# SmartPlate — Proactive Food Waste Prevention System
 
 A React frontend-only prototype for the final-year research project **“A Proactive AI-Based Food Waste Prevention System for Restaurants.”** The interface follows the three-component architecture in the supplied presentation and includes the approved Cost & Savings Calculator extension inside Component 2.
 
@@ -211,7 +211,7 @@ export default function App() {
 
   return <div className="app-shell">
     <aside className="sidebar">
-      <div className="brand-lockup"><div className="brand-mark"><Sprout size={22} strokeWidth={2} /></div><div><strong>Root &amp; Reuse</strong><span>Restaurant intelligence</span></div></div>
+      <div className="brand-lockup"><div className="brand-mark"><Sprout size={22} strokeWidth={2} /></div><div><strong>SmartPlate</strong><span>Restaurant intelligence</span></div></div>
       <div className="workspace-switch"><span className="workspace-logo">GR</span><div><small>WORKSPACE</small><strong>Green Room Bistro</strong></div><span className="workspace-chevron">⌄</span></div>
       <div className="nav-label">RESEARCH COMPONENTS</div>
       <nav className="main-navigation" aria-label="Main components">
@@ -240,7 +240,7 @@ export default function App() {
         <div className={activeTab === 'inventory' ? 'page-visible' : 'page-hidden'}><InventoryRiskPage wasteRecords={wasteRecords} setWasteRecords={setWasteRecords} /></div>
         <div className={activeTab === 'surplus' ? 'page-visible' : 'page-hidden'}><SurplusBiddingPage isActive={activeTab === 'surplus'} /></div>
       </div>
-      <footer className="app-footer"><span>Root &amp; Reuse · Research prototype</span><span><i /> Frontend simulation only</span><span>J26 · IT · 461</span></footer>
+      <footer className="app-footer"><span>SmartPlate · Research prototype</span><span><i /> Frontend simulation only</span><span>J26 · IT · 461</span></footer>
     </main>
   </div>;
 }

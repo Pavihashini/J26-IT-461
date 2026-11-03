@@ -18,7 +18,7 @@ export default function HomePage({ onNavigate }) {
     <header className="home-nav">
       <button type="button" className="home-logo" onClick={() => onNavigate('home')}>
         <span className="brand-mark"><Sprout size={22} strokeWidth={2} /></span>
-        <span><strong>Root &amp; Reuse</strong><small>Restaurant intelligence</small></span>
+        <span><strong>SmartPlate</strong><small>Restaurant intelligence</small></span>
       </button>
       <nav>
         <a href="#features">Features</a>
@@ -33,7 +33,7 @@ export default function HomePage({ onNavigate }) {
       <div className="hero-copy">
         <span className="hero-pill"><Leaf size={14} /> Proactive food waste prevention</span>
         <h1>Cook what you'll sell.<br /><em>Rescue</em> what you won't.</h1>
-        <p>Root &amp; Reuse helps restaurants forecast demand, catch waste risk early and sell surplus food to people who want it.</p>
+        <p>SmartPlate helps restaurants forecast demand, catch waste risk early and sell surplus food to people who want it.</p>
         <div className="hero-actions">
           <button type="button" className="home-cta" onClick={() => onNavigate('user-login')}>Browse surplus food <ArrowRight size={16} /></button>
           <button type="button" className="home-cta ghost" onClick={() => onNavigate('admin-login')}><ShieldCheck size={16} /> Admin dashboard</button>
@@ -88,6 +88,6 @@ export default function HomePage({ onNavigate }) {
       </button>
     </section>
 
-    <footer className="home-footer"><span>Root &amp; Reuse · Research prototype</span><span>J26 · IT · 461</span></footer>
+    <footer className="home-footer"><span>SmartPlate · Research prototype</span><span>J26 · IT · 461</span></footer>
   </div>;
 }

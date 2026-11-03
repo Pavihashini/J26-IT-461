@@ -54,7 +54,7 @@ function Dashboard({ user, onLogout }) {
 
   return <div className="app-shell">
     <aside className="sidebar">
-      <div className="brand-lockup"><div className="brand-mark"><Sprout size={22} strokeWidth={2} /></div><div><strong>Root &amp; Reuse</strong><span>Restaurant intelligence</span></div></div>
+      <div className="brand-lockup"><div className="brand-mark"><Sprout size={22} strokeWidth={2} /></div><div><strong>SmartPlate</strong><span>Restaurant intelligence</span></div></div>
       <div className="workspace-switch"><span className="workspace-logo">GR</span><div><small>WORKSPACE</small><strong>Green Room Bistro</strong></div><span className="workspace-chevron">⌄</span></div>
       <div className="nav-label">RESEARCH COMPONENTS</div>
       <nav className="main-navigation" aria-label="Main components">
@@ -85,7 +85,7 @@ function Dashboard({ user, onLogout }) {
         </>}
         {user.role === 'user' && <div className="page-visible"><SurplusBiddingPage isActive /></div>}
       </div>
-      <footer className="app-footer"><span>Root &amp; Reuse · Research prototype</span><span><i /> Frontend simulation only</span><span>J26 · IT · 461</span></footer>
+      <footer className="app-footer"><span>SmartPlate · Research prototype</span><span><i /> Frontend simulation only</span><span>J26 · IT · 461</span></footer>
     </main>
   </div>;
 }
