@@ -98,10 +98,18 @@ const initials = (name) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((pa
 export default function App() {
   const [session, setSession] = useState({ status: getStoredToken() ? 'checking' : 'signed-out', user: null });
   const [notice, setNotice] = useState('');
-  const [view, setView] = useState(() => new URLSearchParams(window.location.search).has('reset_token') ? 'reset-password' : 'home');
+  const [view, setView] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('reset_token')) return 'reset-password';
+    return params.get('view') === 'guest' ? 'guest' : 'home';
+  });
   const navigate = (next) => {
     setNotice('');
     setView(next);
+    const url = new URL(window.location.href);
+    if (next === 'guest') url.searchParams.set('view', 'guest');
+    else url.searchParams.delete('view');
+    window.history.replaceState(null, '', url);
     window.scrollTo(0, 0);
   };
 

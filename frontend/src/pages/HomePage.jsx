@@ -67,7 +67,7 @@ export default function HomePage({ onNavigate }) {
         <h1><span>Better planning.</span><em>Less waste.</em><span>More possibility.</span></h1>
         <div className="hero-actions">
           <button type="button" className="home-cta" onClick={() => onNavigate('admin-login')}>Open your dashboard <ArrowRight size={17} /></button>
-          <button type="button" className="home-cta ghost" onClick={() => onNavigate('user-login')}>Find surplus food <ChevronRight size={17} /></button>
+          <button type="button" className="home-cta ghost" onClick={() => onNavigate('guest')}>Find surplus food <ChevronRight size={17} /></button>
         </div>
         <div className="sp-hero-note"><Check size={15} /> Thoughtful tools, from kitchen to community.</div>
         <div className="hero-stats">{STATS.map(({ value, label, icon: Icon }) => <div key={label} className="sp-hero-highlight"><Icon size={19} strokeWidth={1.7} /><strong>{value}</strong><span>{label}</span></div>)}</div>
@@ -99,7 +99,7 @@ export default function HomePage({ onNavigate }) {
     </section>
 
     <section className="home-section portals">
-      <button type="button" className="portal-card customer" onClick={() => onNavigate('user-login')}>
+      <button type="button" className="portal-card customer" onClick={() => onNavigate('guest')}>
         <span className="portal-icon"><ShoppingBag size={24} /></span>
         <div><strong>I'm a customer</strong><span>Find surplus meals and place bids.</span></div>
         <ArrowRight size={20} />
@@ -133,8 +133,8 @@ export default function HomePage({ onNavigate }) {
           </nav>
           <nav className="sp-footer-links" aria-label="Explore food">
             <h2>Explore</h2>
-            <button type="button" onClick={() => navigate('user-login')}>Surplus marketplace</button>
-            <button type="button" onClick={() => navigate('user-login')}>Browse meals</button>
+            <button type="button" onClick={() => navigate('guest')}>Surplus marketplace</button>
+            <button type="button" onClick={() => navigate('guest')}>Browse meals</button>
             <a href="#how">Food waste prevention</a>
           </nav>
           <nav className="sp-footer-links" aria-label="For restaurants">

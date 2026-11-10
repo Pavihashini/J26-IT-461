@@ -66,7 +66,7 @@ export default function DemandForecastPage({ selectedDate, setSelectedDate, prep
       />
 
       <div className="stats-grid four">
-        <StatCard label="Predicted portions" value={totalPredicted.toLocaleString('en-LK')} detail="Across 4 menu items" icon={TrendingUp} tone="green" />
+        <StatCard label="Predicted portions" value={totalPredicted.toLocaleString('en-LK')} detail={`Across ${dishes.length} menu items`} icon={TrendingUp} tone="green" />
         <StatCard label="Planned preparation" value={totalPrepared.toLocaleString('en-LK')} detail="Editable kitchen plan" icon={ChefHat} tone="orange" />
         <StatCard label="Preparation buffer" value={`${buffer >= 0 ? '+' : ''}${buffer}`} detail={buffer >= 0 ? 'Portions above forecast' : 'Below predicted demand'} icon={Gauge} tone="purple" />
         <StatCard label="Demand signals" value="6 inputs" detail="POS, guests, weather, calendar" icon={Sparkles} tone="blue" />

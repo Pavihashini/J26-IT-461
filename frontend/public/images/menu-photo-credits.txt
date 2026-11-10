@@ -1,0 +1,138 @@
+SmartPlate restaurant menu photo credits
+=======================================
+
+These photographs illustrate the dish types on the restaurant menu. They are not photographs taken at this restaurant. Recipe variations, plating, and portion sizes may differ.
+
+For CC BY-SA photographs, the images and any image modifications retain the stated share-alike license. No endorsement is implied.
+
+menu-beef-burger.jpg
+Photo: Burger photo from existing SmartPlate home page
+Photographer: Existing repository asset
+Source: smartplate-burger.jpg (existing project asset)
+License: Retains existing asset terms 
+Changes: Unmodified local copy.
+
+menu-beef-fried-rice.jpg
+Photo: Cumin beef fried rice.jpg
+Photographer: Fumikas Sagisavas
+Source: https://commons.wikimedia.org/wiki/File:Cumin_beef_fried_rice.jpg
+License: CC0 http://creativecommons.org/publicdomain/zero/1.0/deed.en
+Changes: Wikimedia-generated thumbnail; saved locally.
+
+menu-beef-kottu.jpg
+Photo: Beef Kothuporotta.jpg
+Photographer: Chinchu.c
+Source: https://commons.wikimedia.org/wiki/File:Beef_Kothuporotta.jpg
+License: CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+Changes: Wikimedia-generated thumbnail; saved locally.
+
+menu-beef-submarine.jpg
+Photo: Liat Portal for Foodie Disorder - Homemade roast beef baguette sandwich.jpg
+Photographer: HaJunkiyada
+Source: https://commons.wikimedia.org/wiki/File:Liat_Portal_for_Foodie_Disorder_-_Homemade_roast_beef_baguette_sandwich.jpg
+License: CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+Changes: Wikimedia-generated thumbnail; saved locally.
+
+menu-cheese-kottu.jpg
+Photo: Veg Kothu Parotta served in Tamil Nadu
+Photographer: KARTY JazZ
+Source: https://commons.wikimedia.org/wiki/File:Veg_Kothu_Parotta_served_in_Tamil_Nadu.JPG
+License: CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0/
+Changes: Previously resized and JPEG-compressed; reused locally.
+Note: Representative vegetable kottu photograph shared with the cheese variation; not a photograph of an exact cheese recipe.
+
+menu-chicken-biryani.jpg
+Photo: A white bowl filled with rice and meat
+Photographer: Mario Raj
+Source: https://unsplash.com/photos/a-white-bowl-filled-with-rice-and-meat-ysmeQt1dzcw
+License: Unsplash License https://unsplash.com/license
+Changes: Previously resized and JPEG-compressed; reused locally.
+Note: Representative dish photograph.
+
+menu-chicken-burger.jpg
+Photo: Chargrilled Chicken Burger - Leon.jpg
+Photographer: Andy Li
+Source: https://commons.wikimedia.org/wiki/File:Chargrilled_Chicken_Burger_-_Leon.jpg
+License: CC0 https://creativecommons.org/publicdomain/zero/1.0/
+Changes: Wikimedia-generated thumbnail; saved locally.
+
+menu-chicken-fried-rice.jpg
+Photo: Delicious Chicken Fried Rice with Fresh Vegetables
+Photographer: UNDO KIM
+Source: https://www.pexels.com/photo/delicious-chicken-fried-rice-with-fresh-vegetables-34668501/
+License: Pexels License https://www.pexels.com/license/
+Changes: Previously resized and JPEG-compressed; reused locally.
+Note: Representative dish photograph.
+
+menu-chicken-kottu.jpg
+Photo: Chicken kotthu.JPG
+Photographer: August Dominus
+Source: https://commons.wikimedia.org/wiki/File:Chicken_kotthu.JPG
+License: CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+Changes: Wikimedia-generated thumbnail; saved locally.
+
+menu-chicken-submarine.jpg
+Photo: Jerked chicken, cheese, pickles, hoagie roll, mustard (4470125495).jpg
+Photographer: jeffreyw
+Source: https://commons.wikimedia.org/wiki/File:Jerked_chicken%2C_cheese%2C_pickles%2C_hoagie_roll%2C_mustard_%284470125495%29.jpg
+License: CC BY 2.0 https://creativecommons.org/licenses/by/2.0
+Changes: Wikimedia-generated thumbnail; saved locally.
+
+menu-egg-biryani.jpg
+Photo: Egg Biryani.JPG
+Photographer: Siya Bedi
+Source: https://commons.wikimedia.org/wiki/File:Egg_Biryani.JPG
+License: CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+Changes: Wikimedia-generated thumbnail; saved locally.
+
+menu-egg-fried-rice.jpg
+Photo: Egg fried rice.jpg
+Photographer: ProjectManhattan
+Source: https://commons.wikimedia.org/wiki/File:Egg_fried_rice.jpg
+License: CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0
+Changes: Wikimedia-generated thumbnail; saved locally.
+
+menu-egg-kottu.jpg
+Photo: AK KotthuMuttaiParotta.JPG
+Photographer: Akandasamy (talk) (Uploads)
+Source: https://commons.wikimedia.org/wiki/File:AK_KotthuMuttaiParotta.JPG
+License: CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
+Changes: Wikimedia-generated thumbnail; saved locally.
+
+menu-hot-dog.jpg
+Photo: Delicious Sausages with Sauces in Bun
+Photographer: Milan
+Source: https://www.pexels.com/photo/delicious-sausages-with-sauces-in-bun-4637755/
+License: Pexels License https://www.pexels.com/license/
+Changes: Previously resized and JPEG-compressed; reused locally.
+Note: Representative dish photograph.
+
+menu-mutton-biryani.jpg
+Photo: Egg Mutton biryani.jpg
+Photographer: Agamani Saha
+Source: https://commons.wikimedia.org/wiki/File:Egg_Mutton_biryani.jpg
+License: CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0
+Changes: Wikimedia-generated thumbnail; saved locally.
+
+menu-seafood-fried-rice.jpg
+Photo: Flavorful Shrimp Fried Rice with Vegetables
+Photographer: Pexels contributor; see source page
+Source: https://www.pexels.com/photo/flavorful-shrimp-fried-rice-with-vegetables-29160634/
+License: Pexels License https://www.pexels.com/license/
+Changes: Pexels-generated resized JPEG; saved locally.
+
+menu-vegetable-biryani.jpg
+Photo: Vegetable Biryani in Pressure Cooker with Colorful Sides
+Photographer: Milton Das
+Source: https://www.pexels.com/photo/vegetable-biryani-in-pressure-cooker-with-colorful-sides-35041655/
+License: Pexels License https://www.pexels.com/license/
+Changes: Previously resized and JPEG-compressed; reused locally.
+Note: Representative dish photograph.
+
+menu-vegetable-kottu.jpg
+Photo: Veg Kothu Parotta served in Tamil Nadu
+Photographer: KARTY JazZ
+Source: https://commons.wikimedia.org/wiki/File:Veg_Kothu_Parotta_served_in_Tamil_Nadu.JPG
+License: CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0/
+Changes: Previously resized and JPEG-compressed; reused locally.
+Note: Representative dish photograph.
